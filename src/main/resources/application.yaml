@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: iticket-final
+  datasource:
+    url: jdbc:postgresql://localhost:5432/your_database_name
+    username: baloghlan
+    password: ${DB_PASS}
