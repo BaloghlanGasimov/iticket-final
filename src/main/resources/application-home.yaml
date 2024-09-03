@@ -1,5 +1,5 @@
 datasource:
-  url: jdbc:postgresql://localhost:5440/iticket_db
+  url: jdbc:postgresql://localhost:5442/iticket_db
   username: baloghlan
   password: baloghlan1234
 jpa:
