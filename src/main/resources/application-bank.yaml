@@ -1,7 +1,7 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5440/iticket_db
-    username: admin
+    url: jdbc:postgresql://localhost:5442/iticket_db
+    username: baloghlan
     password: ${DB_PASS}
   jpa:
     hibernate:

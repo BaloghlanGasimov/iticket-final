@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: baloghlan
+      POSTGRES_PASSWORD: baloghlan1234
+      POSTGRES_DB: iticket_db
+    ports:
+      - "5442:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend-network
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio-storage
+    environment:
+      MINIO_ROOT_USER: baloghlan
+      MINIO_ROOT_PASSWORD: baloghlan1234
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      - backend-network
+
+volumes:
+  postgres_data:
+  minio_data:
+
+networks:
+  backend-network:

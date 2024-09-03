@@ -4,6 +4,7 @@ import com.example.iticketfinal.dto.company.PrimaryCompanyLoginReqDto;
 import com.example.iticketfinal.service.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/company")
