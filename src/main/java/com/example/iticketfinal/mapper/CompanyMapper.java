@@ -1,6 +1,7 @@
 package com.example.iticketfinal.mapper;
 
 import com.example.iticketfinal.dao.entity.CompanyEntity;
+import com.example.iticketfinal.dto.company.CompanyRespDto;
 import com.example.iticketfinal.dto.company.PrimaryCompanyLoginReqDto;
 import org.mapstruct.Mapper;
 
@@ -8,5 +9,6 @@ import org.mapstruct.Mapper;
 public interface CompanyMapper {
 
     CompanyEntity mapToEntity(PrimaryCompanyLoginReqDto companyLoginReqDto);
+    CompanyRespDto mapToRespDto(CompanyEntity companyEntity);
 
 }
