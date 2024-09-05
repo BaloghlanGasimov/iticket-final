@@ -9,11 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.net.URL;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -26,10 +21,10 @@ public class ImageService {
     private final MinioClient minioClient;
     private final StringUtil stringUtil;
 
-    public ImageEntity setImageToBucket(MultipartFile image,String bucketName) throws Exception {
+    public ImageEntity setImageToBucket(MultipartFile image, String bucketName) throws Exception {
         if (image != null && image.getOriginalFilename() != null) {
             String[] imageDividedName = stringUtil.divideFilename(image.getOriginalFilename());
-            if(imageDividedName == null){
+            if (imageDividedName == null) {
                 throw new Exception();
             }
             String originalName = imageDividedName[0];
@@ -41,50 +36,47 @@ public class ImageService {
             String cleanedOriginalName = stringUtil.removeSpaces(originalName);
             String imageName = cleanedOriginalName + "_" + formattedDateTime + "." + extension;
 
-
-
             if (!checkBucketHas(bucketName)) {
-            minioClient.makeBucket(
-                    MakeBucketArgs
-                            .builder()
+                minioClient.makeBucket(
+                        MakeBucketArgs
+                                .builder()
+                                .bucket(bucketName)
+                                .build());
+            }
+
+            minioClient.putObject(
+                    PutObjectArgs.builder()
                             .bucket(bucketName)
-                            .build());
+                            .object(imageName)
+                            .stream(
+                                    image.getInputStream(),
+                                    image.getSize(),
+                                    -1
+                            )
+                            .build()
+            );
+
+            String presignedUrl = minioClient.getPresignedObjectUrl(
+                    GetPresignedObjectUrlArgs.builder()
+                            .bucket(bucketName)
+                            .object(imageName)
+                            .method(Method.GET)
+                            .expiry(10 * 60 * 60)
+                            .build()
+            );
+            ImageEntity imageEntity = new ImageEntity()
+                    .builder()
+                    .name(imageName)
+                    .bucket(bucketName)
+                    .path(presignedUrl)
+                    .build();
+            imageRepository.save(imageEntity);
+            return imageEntity;
         }
-
-        minioClient.putObject(
-                PutObjectArgs.builder()
-                        .bucket(bucketName)
-                        .object(imageName)
-                        .stream(
-                                image.getInputStream(),
-                                image.getSize(),
-                                -1
-                        )
-                        .build()
-        );
-
-        System.out.println("burda2");
-
-        String presignedUrl = minioClient.getPresignedObjectUrl(
-                GetPresignedObjectUrlArgs.builder()
-                        .bucket(bucketName)
-                        .object(imageName)
-                        .method(Method.GET)
-                        .expiry(10 * 60 * 60)
-                        .build()
-        );
-        ImageEntity imageEntity = new ImageEntity()
-                        .builder()
-                        .name(imageName)
-                        .path(presignedUrl)
-                .build();
-        imageRepository.save(imageEntity);
-        return imageEntity;
-    }
         return null;
     }
 
-    public boolean checkBucketHas(String bucketName){
+    public boolean checkBucketHas(String bucketName) {
         try {
             boolean isExist = minioClient.bucketExists(
                     BucketExistsArgs
@@ -93,10 +85,33 @@ public class ImageService {
                             .build()
             );
             return isExist;
-        }catch (Exception e){
+        } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
+    }
 
+    public void deleteFile(String fileName,String bucketName) {
+        try {
+            ImageEntity imageEntity =imageRepository.findByNameAndBucket(fileName,bucketName).orElse(null);
+            if(imageEntity!=null){
+                imageRepository.delete(imageEntity);
+            }
+
+            minioClient.removeObject(
+                    RemoveObjectArgs
+                            .builder()
+                            .bucket(bucketName)
+                            .object(fileName)
+                            .build()
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+
+
+            log.error("ActionLog.deleteFile in CompanyService fileName: {}, bucketName: {}", fileName, bucketName);
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
 }

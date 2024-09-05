@@ -19,6 +19,7 @@ public class ImageEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private String bucket;
     @Column(length = 1000)
     private String path;
     @CreationTimestamp
