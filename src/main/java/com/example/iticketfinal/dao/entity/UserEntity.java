@@ -24,9 +24,10 @@ public class UserEntity {
     private String email;
     private String phone;
     private LocalDate birthDate;
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "country_id")
     private CountryEntity country;
 

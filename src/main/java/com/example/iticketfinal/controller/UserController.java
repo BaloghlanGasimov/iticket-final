@@ -1,6 +1,7 @@
 package com.example.iticketfinal.controller;
 
 import com.example.iticketfinal.dto.BaseResponseDto;
+import com.example.iticketfinal.dto.user.UserLoginReqDto;
 import com.example.iticketfinal.dto.user.UserPrimaryLoginReqDto;
 import com.example.iticketfinal.dto.user.UserRespDto;
 import com.example.iticketfinal.service.UserService;
@@ -17,10 +18,18 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/primary")
-    public void saveUser(
+    public BaseResponseDto<UserRespDto> saveUserPrimary(
             @Valid @RequestBody UserPrimaryLoginReqDto userPrimaryLoginReqDto
     ){
-        userService.saveUser(userPrimaryLoginReqDto);
+        return userService.saveUserPrimary(userPrimaryLoginReqDto);
+    }
+
+    @PutMapping("/{id}")
+    public BaseResponseDto<UserRespDto> updateUser(
+            @PathVariable Long id,
+            @Valid @RequestBody UserLoginReqDto userLoginReqDto
+            ){
+        return userService.updateUser(id,userLoginReqDto);
     }
 
     @GetMapping
