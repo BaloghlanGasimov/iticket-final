@@ -1,5 +1,6 @@
 package com.example.iticketfinal.dto.company;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,10 +10,10 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PrimaryCompanyLoginReqDto {
+public class CompanyPrimaryLoginReqDto {
     @NotNull
     private String name;
-    @NotNull
+    @Email
     private String email;
     @NotNull
     private MultipartFile logoImage;

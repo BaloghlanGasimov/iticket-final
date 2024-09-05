@@ -6,8 +6,8 @@ import com.example.iticketfinal.dao.entity.PhoneEntity;
 import com.example.iticketfinal.dao.repository.CompanyRepository;
 import com.example.iticketfinal.dto.BaseResponseDto;
 import com.example.iticketfinal.dto.company.CompanyLoginReqDto;
+import com.example.iticketfinal.dto.company.CompanyPrimaryLoginReqDto;
 import com.example.iticketfinal.dto.company.CompanyRespDto;
-import com.example.iticketfinal.dto.company.PrimaryCompanyLoginReqDto;
 import com.example.iticketfinal.enums.Exceptions;
 import com.example.iticketfinal.enums.Status;
 import com.example.iticketfinal.exceptions.NotFoundException;
@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -66,7 +65,7 @@ public class CompanyService {
         log.info("ActionLog.getCompanies.end");
         return BaseResponseDto.success(companyRespDtos);
     }
-    public BaseResponseDto<CompanyRespDto> savePrimaryCompany(@RequestBody PrimaryCompanyLoginReqDto companyLoginReqDto){
+    public BaseResponseDto<CompanyRespDto> savePrimaryCompany(@RequestBody CompanyPrimaryLoginReqDto companyLoginReqDto){
         log.info("ActionLog.savePrimaryCompany.start {}", companyLoginReqDto);
 
         CompanyEntity companyEntity = companyMapper.mapToEntity(companyLoginReqDto);

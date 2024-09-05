@@ -4,6 +4,7 @@ import com.example.iticketfinal.dao.entity.EventEntity;
 import com.example.iticketfinal.dao.entity.PhoneEntity;
 import com.example.iticketfinal.dto.event.EventReqDto;
 import com.example.iticketfinal.dto.phone.PhoneReqDto;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,7 +19,7 @@ import java.util.List;
 public class CompanyLoginReqDto {
     @NotNull
     private String name;
-    @NotNull
+    @Email
     private String email;
     @NotNull
     private MultipartFile logoImage;

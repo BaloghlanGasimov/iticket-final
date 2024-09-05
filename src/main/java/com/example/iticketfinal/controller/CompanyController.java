@@ -3,7 +3,7 @@ package com.example.iticketfinal.controller;
 import com.example.iticketfinal.dto.BaseResponseDto;
 import com.example.iticketfinal.dto.company.CompanyLoginReqDto;
 import com.example.iticketfinal.dto.company.CompanyRespDto;
-import com.example.iticketfinal.dto.company.PrimaryCompanyLoginReqDto;
+import com.example.iticketfinal.dto.company.CompanyPrimaryLoginReqDto;
 import com.example.iticketfinal.enums.Status;
 import com.example.iticketfinal.service.CompanyService;
 import jakarta.validation.Valid;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/company")
+@RequestMapping("/companies")
 @RequiredArgsConstructor
 public class CompanyController {
     private final CompanyService companyService;
@@ -35,7 +35,7 @@ public class CompanyController {
 
     @PostMapping("/primary")
     public BaseResponseDto<CompanyRespDto> savePrimaryCompany(
-            @ModelAttribute @Valid PrimaryCompanyLoginReqDto companyLoginReqDto
+            @ModelAttribute @Valid CompanyPrimaryLoginReqDto companyLoginReqDto
             ) {
         return companyService.savePrimaryCompany(companyLoginReqDto);
     }
