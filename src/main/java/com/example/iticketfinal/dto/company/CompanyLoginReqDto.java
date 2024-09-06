@@ -26,5 +26,4 @@ public class CompanyLoginReqDto {
     private String website;
     private String description;
     private List<PhoneReqDto> phones;
-    private List<EventReqDto> events;
 }
