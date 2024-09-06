@@ -38,7 +38,7 @@ public class CompanyEntity {
     @OneToMany(cascade = CascadeType.ALL)
     private List<PhoneEntity> phones;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "company")
     private List<EventEntity> events;
 
     @PreUpdate
