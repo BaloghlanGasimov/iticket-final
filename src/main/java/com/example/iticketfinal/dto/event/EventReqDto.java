@@ -24,4 +24,6 @@ public class EventReqDto {
     private LocalDateTime eventDate;
     @NotNull
     private List<TicketDto> tickets;
+    @NotBlank
+    private Integer companyId;
 }
