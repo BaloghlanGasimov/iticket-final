@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -19,6 +20,9 @@ public class EventEntity {
     private String title;
     private String description;
     private LocalDateTime eventDate;
+
+    @OneToMany(mappedBy = "event")
+    private List<TicketEntity> tickets;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "company_id")
