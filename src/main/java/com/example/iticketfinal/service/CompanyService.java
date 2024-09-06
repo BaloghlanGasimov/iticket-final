@@ -114,10 +114,6 @@ public class CompanyService {
             List<PhoneEntity> phones = companyLoginReqDto.getPhones().stream().map(phoneMapper::mapToEntity).toList();
             company.setPhones(phones);
         }
-        if(companyLoginReqDto.getEvents()!=null){
-            List<EventEntity> events = companyLoginReqDto.getEvents().stream().map(eventMapper::mapToEntity).toList();
-            company.setEvents(events);
-        }
         if(companyLoginReqDto.getLogoImage()!=null){
             imageService.deleteFile(company.getLogo().getName(),company.getLogo().getBucket());
             try {
