@@ -73,7 +73,7 @@ public class CompanyService {
             companyEntity.setLogo(imageService.setImageToBucket(companyLoginReqDto.getLogoImage(),"company"));
         }catch (Exception e){
             e.printStackTrace();
-            log.error("ActionLog.savePrimaryCompany.error when setting imageToMinioBucket and getting String {}",companyLoginReqDto);
+            log.error("ActionLog.savePrimaryCompany.error when setting imageToMinioBucket and getting imageEntity {}",companyLoginReqDto);
         }
         companyRepository.save(companyEntity);
         CompanyRespDto companyRespDto = companyMapper.mapToRespDto(companyEntity);

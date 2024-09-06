@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,4 +28,9 @@ public class EventEntity {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "company_id")
     private CompanyEntity company;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id")
+    private List<ImageEntity> images;
+
 }

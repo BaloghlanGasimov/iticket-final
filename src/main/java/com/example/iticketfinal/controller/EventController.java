@@ -18,7 +18,7 @@ public class EventController {
     @PostMapping
     public void saveEvent(
             @ModelAttribute EventReqDto eventReqDto
-            ){
+    ){
         eventService.saveEvent(eventReqDto);
     }
 

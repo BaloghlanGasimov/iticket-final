@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,4 +27,5 @@ public class EventReqDto {
     private List<TicketDto> tickets;
     @NotBlank
     private Integer companyId;
+    private List<MultipartFile> eventImages;
 }
