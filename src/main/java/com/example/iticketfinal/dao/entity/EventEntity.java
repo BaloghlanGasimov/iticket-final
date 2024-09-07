@@ -1,5 +1,6 @@
 package com.example.iticketfinal.dao.entity;
 
+import com.example.iticketfinal.enums.EventCategory;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,8 +21,9 @@ public class EventEntity {
     private Long id;
     private String title;
     private String description;
+    @Enumerated(EnumType.STRING)
+    private EventCategory category;
     private LocalDateTime eventDate;
-
     @OneToMany(mappedBy = "event")
     private List<TicketEntity> tickets;
 
