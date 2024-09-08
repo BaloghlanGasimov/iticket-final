@@ -33,6 +33,7 @@ public class CompanyEntity {
     private LocalDateTime updatedAt;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id")
     private ImageEntity logo;
 
     @OneToMany(cascade = CascadeType.ALL)

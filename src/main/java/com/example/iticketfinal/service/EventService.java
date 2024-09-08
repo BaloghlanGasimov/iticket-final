@@ -26,8 +26,8 @@ public class EventService {
         List<ImageEntity> images = new ArrayList<>();
         for (int i = 0; i <eventReqDto.getEventImages().size() ; i++) {
             try {
-                ImageEntity image = imageService.setImageToBucket(eventReqDto.getEventImages().get(i),"event");
-                images.add(image);
+//                ImageEntity image = imageService.setImageToBucket(eventReqDto.getEventImages().get(i),"event");
+//                images.add(image);
             }catch (Exception e){
                 e.printStackTrace();
                 log.error("ActionLog.saveEvent.error when setting imageToMinioBucket and getting imageEntity {}",eventReqDto);

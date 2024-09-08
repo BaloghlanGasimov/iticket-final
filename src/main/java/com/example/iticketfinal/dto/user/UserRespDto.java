@@ -1,6 +1,7 @@
 package com.example.iticketfinal.dto.user;
 
 import com.example.iticketfinal.dao.entity.CountryEntity;
+import com.example.iticketfinal.dto.country.CountryDto;
 import com.example.iticketfinal.enums.Gender;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,6 @@ public class UserRespDto {
 
     @ManyToOne
     @JoinColumn(name = "country_id")
-    private CountryEntity country;
+    private CountryDto country;
 
 }

@@ -1,18 +1,19 @@
 package com.example.iticketfinal.dao.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "images")
 @Builder
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class ImageEntity {
 
     @Id
@@ -23,5 +24,5 @@ public class ImageEntity {
     @Column(length = 1000)
     private String path;
     @CreationTimestamp
-    private String createdAt;
+    private LocalDateTime createdAt;
 }

@@ -2,6 +2,7 @@ package com.example.iticketfinal.controller;
 
 import com.example.iticketfinal.dto.exception.ExceptionDto;
 import com.example.iticketfinal.exceptions.NotFoundException;
+import com.example.iticketfinal.exceptions.WrongFileNameException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -35,10 +36,19 @@ public class GlobalExceptionHandler {
         return exceptionDtos;
     }
 
+    @ExceptionHandler(WrongFileNameException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionDto handler(WrongFileNameException e){
+        log.error(e.getLogMessage());
+        return new ExceptionDto("Invalid file name:" + e.getErrorMessage());
+    }
+
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ExceptionDto handler(Exception e){
 //        log.error(e.getLogMessage());
+        e.printStackTrace();
         return new ExceptionDto(e.getMessage());
     }
 
