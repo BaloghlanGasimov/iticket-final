@@ -24,12 +24,17 @@ public class EventEntity {
     @Enumerated(EnumType.STRING)
     private EventCategory category;
     private LocalDateTime eventDate;
-    @OneToMany(mappedBy = "event")
+
+    @OneToMany(mappedBy = "event",cascade = CascadeType.ALL)
     private List<TicketEntity> tickets;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "company_id")
     private CompanyEntity company;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "place_id")
+    private PlaceEntity place;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id")

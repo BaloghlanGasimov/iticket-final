@@ -72,15 +72,16 @@ public class ImageService {
                                 .expiry(10 * 60 * 60)
                                 .build()
                 );
-                ImageEntity imageEntity = new ImageEntity()
+                imageDto = new ImageDto()
                         .builder()
                         .name(imageName)
                         .bucket(bucketName)
                         .path(presignedUrl)
+                        .createdAt(LocalDateTime.now())
                         .build();
-                imageRepository.save(imageEntity);
+//                imageRepository.save(imageEntity);
 
-                imageDto = imageMapper.mapToDto(imageEntity);
+//                imageDto = imageMapper.mapToDto(imageEntity);
 
             }catch (Exception e){
                 log.error("ActionLog.setImageToBucket.error Can't file to minio and take imageEntity," +

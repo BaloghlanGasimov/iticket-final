@@ -209,6 +209,7 @@ public class CompanyService {
         log.info("ActionLog.savePrimaryCompany.start {}", companyLoginReqDto);
 
         CompanyEntity companyEntity = companyMapper.mapToEntity(companyLoginReqDto);
+//        companyEntity.setLogo();
         companyRepository.save(companyEntity);
         CompanyRespDto companyRespDto = companyMapper.mapToRespDto(companyEntity);
 
