@@ -22,6 +22,14 @@ public class EventController {
         eventService.saveEvent(eventReqDto);
     }
 
+    @PutMapping("/{id}")
+    public void editEvent(
+            @PathVariable Long id,
+            @RequestBody EventReqDto eventReqDto
+    ){
+        eventService.editEvent(id,eventReqDto);
+    }
+
     @DeleteMapping("/{id}")
     public BaseResponseDto<EventRespDto> deleteEvent(
             @PathVariable Long id
