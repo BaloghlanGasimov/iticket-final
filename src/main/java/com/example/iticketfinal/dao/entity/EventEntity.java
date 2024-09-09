@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -21,9 +22,12 @@ public class EventEntity {
     private Long id;
     private String title;
     private String description;
+    private boolean expired;
     @Enumerated(EnumType.STRING)
     private EventCategory category;
     private LocalDateTime eventDate;
+    @CreationTimestamp
+    private LocalDateTime createdDate;
 
     @OneToMany(mappedBy = "event",cascade = CascadeType.ALL)
     private List<TicketEntity> tickets;

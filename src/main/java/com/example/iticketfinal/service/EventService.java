@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,17 @@ public class EventService {
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
     private final PerformerRepository performerRepository;
+
+    public void checkEventExpire(){
+        log.info("ActionLog.checkEventExpire.start");
+
+        List<EventEntity> eventEntities = eventRepository.findAllByExpiredIsFalse();
+        List<EventEntity> expiredEvents = eventEntities.stream().filter((event)->event.getEventDate().isBefore(LocalDateTime.now())).toList();
+        expiredEvents.stream().forEach(expiredEvent -> expiredEvent.setExpired(true));
+        eventRepository.saveAll(expiredEvents);
+
+        log.info("ActionLog.checkEventExpire.end");
+    }
 
     public void saveEvent(EventReqDto eventReqDto) {
         log.info("ActionLog.saveEvent.start eventReqDto: {}", eventReqDto);
