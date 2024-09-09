@@ -39,7 +39,6 @@ public class CountryService {
             log.info("ActionLog.saveAndGetCountries.end do not save just returned");
             return countryDtos;
         }
-
     }
 
 }

@@ -52,11 +52,8 @@ package com.example.iticketfinal.dto.company;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CompanyLoginReqDto {
-    @NotBlank
     private String name;
-    @Email
     private String email;
-    @NotNull
     private ImageDto logo;
     private String website;
     private String description;
