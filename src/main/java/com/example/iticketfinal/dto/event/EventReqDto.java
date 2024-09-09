@@ -1,7 +1,9 @@
 package com.example.iticketfinal.dto.event;
 
+import com.example.iticketfinal.dao.entity.PerformerEntity;
 import com.example.iticketfinal.dao.entity.TicketEntity;
 import com.example.iticketfinal.dto.image.ImageDto;
+import com.example.iticketfinal.dto.performer.PerformerDto;
 import com.example.iticketfinal.dto.ticket.TicketDto;
 import com.example.iticketfinal.enums.EventCategory;
 import jakarta.validation.constraints.NotBlank;
@@ -36,4 +38,5 @@ public class EventReqDto {
     @NotBlank
     private Integer placeId;
     private List<ImageDto> images;
+    private List<PerformerDto> performers;
 }

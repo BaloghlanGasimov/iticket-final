@@ -37,7 +37,14 @@ public class EventEntity {
     private PlaceEntity place;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "image_id")
+    @JoinColumn(name = "event_id")
     private List<ImageEntity> images;
+
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(
+            name = "events_performers",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "performer_id"))
+    private List<PerformerEntity> performers;
 
 }
