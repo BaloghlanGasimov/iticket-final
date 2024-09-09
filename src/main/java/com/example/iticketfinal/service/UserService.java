@@ -1,7 +1,9 @@
 package com.example.iticketfinal.service;
 
 import com.example.iticketfinal.dao.entity.CountryEntity;
+import com.example.iticketfinal.dao.entity.PhoneEntity;
 import com.example.iticketfinal.dao.entity.UserEntity;
+import com.example.iticketfinal.dao.repository.CountryRepository;
 import com.example.iticketfinal.dao.repository.UserRepository;
 import com.example.iticketfinal.dto.BaseResponseDto;
 import com.example.iticketfinal.dto.country.CountryDto;
@@ -11,6 +13,7 @@ import com.example.iticketfinal.dto.user.UserRespDto;
 import com.example.iticketfinal.enums.Exceptions;
 import com.example.iticketfinal.exceptions.NotFoundException;
 import com.example.iticketfinal.mapper.CountryMapper;
+import com.example.iticketfinal.mapper.PhoneMapper;
 import com.example.iticketfinal.mapper.UserMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +30,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final CountryMapper countryMapper;
+    private final CountryRepository countryRepository;
+    private final PhoneMapper phoneMapper;
 
     public BaseResponseDto<UserRespDto> saveUserPrimary(UserPrimaryLoginReqDto userPrimaryLoginReqDto){
         log.info("ActionLog.saveUser.start userPrimaryLoginReqDto: {}",userPrimaryLoginReqDto);
@@ -45,6 +50,19 @@ public class UserService {
 
         UserEntity userEntity = findUser(id);
         userEntity = userMapper.mapUpdatingToEntity(userEntity,userLoginReqDto);
+        if(userLoginReqDto.getCountryId()!=null){
+            CountryEntity countryEntity = countryRepository.findById((long)userLoginReqDto.getCountryId())
+                    .orElse(null);
+
+            userEntity.setCountry(countryEntity);
+        }
+        if(userLoginReqDto.getPhones()!=null){
+            List<PhoneEntity> phones = userLoginReqDto.getPhones().stream().map(phoneMapper::mapToEntity).collect(Collectors.toList());
+            for (PhoneEntity phone : phones) {
+                phone.setUser(userEntity);
+            }
+            userEntity.setPhones(phones);
+        }
         userRepository.save(userEntity);
         UserRespDto userRespDto = userMapper.mapToRespDto(userEntity);
         log.info("ActionLog.updateUser.end id: {} userLoginReqDto: {}",id,userLoginReqDto);

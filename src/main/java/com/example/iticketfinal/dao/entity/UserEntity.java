@@ -42,4 +42,8 @@ public class UserEntity {
     @JoinColumn(name = "user_id")
     private List<PurchaseHistoryEntity> purchaseHistory;
 
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<PhoneEntity> phones;
+
+
 }

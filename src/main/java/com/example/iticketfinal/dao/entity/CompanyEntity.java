@@ -36,10 +36,10 @@ public class CompanyEntity {
     @JoinColumn(name = "image_id")
     private ImageEntity logo;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "company",cascade = CascadeType.ALL)
     private List<PhoneEntity> phones;
 
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "company",cascade = CascadeType.ALL)
     private List<EventEntity> events;
 
     @PreUpdate

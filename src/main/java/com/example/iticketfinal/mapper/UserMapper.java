@@ -5,6 +5,7 @@ import com.example.iticketfinal.dao.entity.UserEntity;
 import com.example.iticketfinal.dto.user.UserLoginReqDto;
 import com.example.iticketfinal.dto.user.UserPrimaryLoginReqDto;
 import com.example.iticketfinal.dto.user.UserRespDto;
+import com.example.iticketfinal.service.CountryService;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
 
@@ -32,13 +33,6 @@ public interface UserMapper {
         }
         if(userLoginReqDto.getGender()!=null){
             userEntity.setGender(userLoginReqDto.getGender());
-        }
-        if(userLoginReqDto.getCountry()!=null){
-            CountryEntity countryEntity =new CountryEntity();
-            if(userLoginReqDto.getCountry().getName()!=null){
-                countryEntity.setName(userLoginReqDto.getCountry().getName());
-            }
-            userEntity.setCountry(countryEntity);
         }
 
         return userEntity;

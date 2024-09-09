@@ -19,9 +19,4 @@ public class UserPrimaryLoginReqDto {
     private String surname;
     @Email
     private String email;
-//    @Schema(type = "string", format = "binary")
-//    private MultipartFile test;
-//    @PostMapping(value = "/primary",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    @PostMapping(value = "/primary",consumes = { "multipart/form-data" })
-
 }

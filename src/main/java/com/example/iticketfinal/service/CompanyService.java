@@ -247,6 +247,9 @@ public class CompanyService {
         }
         if(companyLoginReqDto.getPhones()!=null){
             List<PhoneEntity> phones = companyLoginReqDto.getPhones().stream().map(phoneMapper::mapToEntity).toList();
+            for (PhoneEntity phone : phones) {
+                phone.setCompany(company);
+            }
             company.setPhones(phones);
         }
         if(companyLoginReqDto.getLogo()!=null){
