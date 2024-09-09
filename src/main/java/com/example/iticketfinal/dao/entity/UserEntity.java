@@ -22,7 +22,6 @@ public class UserEntity {
     private String name;
     private String surname;
     private String email;
-    private String phone;
     private LocalDate birthDate;
     @Enumerated(EnumType.STRING)
     private Gender gender;
@@ -44,6 +43,5 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<PhoneEntity> phones;
-
 
 }

@@ -2,6 +2,7 @@ package com.example.iticketfinal.dto.user;
 
 import com.example.iticketfinal.dao.entity.CountryEntity;
 import com.example.iticketfinal.dto.country.CountryDto;
+import com.example.iticketfinal.dto.phone.PhoneReqDto;
 import com.example.iticketfinal.enums.Gender;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -23,8 +25,7 @@ public class UserRespDto {
     private LocalDate birthDate;
     private Gender gender;
 
-    @ManyToOne
-    @JoinColumn(name = "country_id")
     private CountryDto country;
+    private List<PhoneReqDto> phones;
 
 }

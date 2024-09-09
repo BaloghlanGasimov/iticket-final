@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -43,6 +44,27 @@ public class EventService {
         eventRepository.saveAll(expiredEvents);
 
         log.info("ActionLog.checkEventExpire.end");
+    }
+
+    public BaseResponseDto<List<EventRespDto>> getAllEvents(Boolean expired) {
+        log.info("ActionLog.getAllEvents.start");
+
+        List<EventEntity> eventEntities = eventRepository.findAll();
+        var filteredEvents = eventEntities.stream().filter(eventEntity -> eventEntity.getExpired()==null || eventEntity.getExpired().equals(expired)).collect(Collectors.toList());
+        List<EventRespDto> eventRespDtos = filteredEvents.stream().map(eventMapper::mapToRespDto).toList();
+
+        log.info("ActionLog.getAllEvents.end");
+        return BaseResponseDto.success(eventRespDtos);
+    }
+
+    public BaseResponseDto<EventRespDto> getEventById(Long id){
+        log.info("ActionLog.getEventById.start id: {}",id);
+
+        EventEntity event = findEvent(id);
+        EventRespDto eventRespDto = eventMapper.mapToRespDto(event);
+
+        log.info("ActionLog.getEventById.end id: {}",id);
+        return BaseResponseDto.success(eventRespDto);
     }
 
     public void saveEvent(EventReqDto eventReqDto) {

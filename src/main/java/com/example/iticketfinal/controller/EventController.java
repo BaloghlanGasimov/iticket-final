@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/events")
 @RequiredArgsConstructor
@@ -37,4 +39,17 @@ public class EventController {
         return eventService.deleteEvent(id);
     }
 
+    @GetMapping
+    public BaseResponseDto<List<EventRespDto>> getAllEvents(
+            @RequestParam(required = false) Boolean expired
+    ){
+        return eventService.getAllEvents(expired);
+    }
+
+    @GetMapping("/{id}")
+    public BaseResponseDto<EventRespDto> getEventById(
+            @PathVariable Long id
+    ){
+        return eventService.getEventById(id);
+    }
 }
