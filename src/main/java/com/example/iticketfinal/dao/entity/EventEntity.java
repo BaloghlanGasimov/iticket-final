@@ -1,5 +1,6 @@
 package com.example.iticketfinal.dao.entity;
 
+import com.example.iticketfinal.enums.EventCategory;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,17 +21,30 @@ public class EventEntity {
     private Long id;
     private String title;
     private String description;
+    @Enumerated(EnumType.STRING)
+    private EventCategory category;
     private LocalDateTime eventDate;
 
-    @OneToMany(mappedBy = "event")
+    @OneToMany(mappedBy = "event",cascade = CascadeType.ALL)
     private List<TicketEntity> tickets;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "company_id")
     private CompanyEntity company;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "place_id")
+    private PlaceEntity place;
+
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "image_id")
+    @JoinColumn(name = "event_id")
     private List<ImageEntity> images;
+
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(
+            name = "events_performers",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "performer_id"))
+    private List<PerformerEntity> performers;
 
 }

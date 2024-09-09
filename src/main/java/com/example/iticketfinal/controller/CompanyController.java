@@ -35,7 +35,7 @@ public class CompanyController {
 
     @PostMapping("/primary")
     public BaseResponseDto<CompanyRespDto> savePrimaryCompany(
-            @ModelAttribute @Valid CompanyPrimaryLoginReqDto companyLoginReqDto
+            @RequestBody @Valid CompanyPrimaryLoginReqDto companyLoginReqDto
             ) {
         return companyService.savePrimaryCompany(companyLoginReqDto);
     }
@@ -51,7 +51,7 @@ public class CompanyController {
     @PutMapping("/{id}")
     public CompanyRespDto updateCompany(
             @PathVariable Long id,
-            @Valid @ModelAttribute CompanyLoginReqDto companyLoginReqDto
+            @Valid @RequestBody CompanyLoginReqDto companyLoginReqDto
             ){
         return companyService.updateCompany(id,companyLoginReqDto);
     }

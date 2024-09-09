@@ -2,6 +2,10 @@ package com.example.iticketfinal.service;
 
 import com.example.iticketfinal.dao.entity.ImageEntity;
 import com.example.iticketfinal.dao.repository.ImageRepository;
+import com.example.iticketfinal.dto.image.ImageDto;
+import com.example.iticketfinal.enums.Exceptions;
+import com.example.iticketfinal.exceptions.WrongFileNameException;
+import com.example.iticketfinal.mapper.ImageMapper;
 import com.example.iticketfinal.util.StringUtil;
 import io.minio.*;
 import io.minio.http.Method;
@@ -17,15 +21,18 @@ import java.time.format.DateTimeFormatter;
 @RequiredArgsConstructor
 public class ImageService {
     private final ImageRepository imageRepository;
+    private final ImageMapper imageMapper;
 
     private final MinioClient minioClient;
-    private final StringUtil stringUtil;
 
-    public ImageEntity setImageToBucket(MultipartFile image, String bucketName) throws Exception {
+    public ImageDto setImageToBucket(MultipartFile image, String bucketName) {
         if (image != null && image.getOriginalFilename() != null) {
-            String[] imageDividedName = stringUtil.divideFilename(image.getOriginalFilename());
+            String[] imageDividedName = StringUtil.divideFilename(image.getOriginalFilename());
             if (imageDividedName == null) {
-                throw new Exception();
+                throw new WrongFileNameException(
+                        Exceptions.WRONG_FILE_NAME.toString(),
+                        String.format("ActionLog.setImageToBucket.error WrongFileName: %s",image.getOriginalFilename())
+                );
             }
             String originalName = imageDividedName[0];
             String extension = imageDividedName[1];
@@ -33,45 +40,57 @@ public class ImageService {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
             String formattedDateTime = LocalDateTime.now().format(formatter);
 
-            String cleanedOriginalName = stringUtil.removeSpaces(originalName);
+            String cleanedOriginalName = StringUtil.removeSpaces(originalName);
             String imageName = cleanedOriginalName + "_" + formattedDateTime + "." + extension;
 
-            if (!checkBucketHas(bucketName)) {
-                minioClient.makeBucket(
-                        MakeBucketArgs
-                                .builder()
+            ImageDto imageDto =null;
+            try {
+                if (!checkBucketHas(bucketName)) {
+                    minioClient.makeBucket(
+                            MakeBucketArgs
+                                    .builder()
+                                    .bucket(bucketName)
+                                    .build());
+                }
+                minioClient.putObject(
+                        PutObjectArgs.builder()
                                 .bucket(bucketName)
-                                .build());
+                                .object(imageName)
+                                .stream(
+                                        image.getInputStream(),
+                                        image.getSize(),
+                                        -1
+                                )
+                                .build()
+                );
+
+                String presignedUrl = minioClient.getPresignedObjectUrl(
+                        GetPresignedObjectUrlArgs.builder()
+                                .bucket(bucketName)
+                                .object(imageName)
+                                .method(Method.GET)
+                                .expiry(10 * 60 * 60)
+                                .build()
+                );
+                imageDto = new ImageDto()
+                        .builder()
+                        .name(imageName)
+                        .bucket(bucketName)
+                        .path(presignedUrl)
+                        .createdAt(LocalDateTime.now())
+                        .build();
+//                imageRepository.save(imageEntity);
+
+//                imageDto = imageMapper.mapToDto(imageEntity);
+
+            }catch (Exception e){
+                log.error("ActionLog.setImageToBucket.error Can't file to minio and take imageEntity," +
+                        " fileName: {}" +
+                        ", bucketName: {}",image.getOriginalFilename(),bucketName);
             }
 
-            minioClient.putObject(
-                    PutObjectArgs.builder()
-                            .bucket(bucketName)
-                            .object(imageName)
-                            .stream(
-                                    image.getInputStream(),
-                                    image.getSize(),
-                                    -1
-                            )
-                            .build()
-            );
 
-            String presignedUrl = minioClient.getPresignedObjectUrl(
-                    GetPresignedObjectUrlArgs.builder()
-                            .bucket(bucketName)
-                            .object(imageName)
-                            .method(Method.GET)
-                            .expiry(10 * 60 * 60)
-                            .build()
-            );
-            ImageEntity imageEntity = new ImageEntity()
-                    .builder()
-                    .name(imageName)
-                    .bucket(bucketName)
-                    .path(presignedUrl)
-                    .build();
-            imageRepository.save(imageEntity);
-            return imageEntity;
+            return imageDto;
         }
         return null;
     }
@@ -91,7 +110,7 @@ public class ImageService {
         }
     }
 
-    public void deleteFile(String fileName,String bucketName) {
+    public void deleteFile(String bucketName,String fileName) {
         try {
             ImageEntity imageEntity =imageRepository.findByNameAndBucket(fileName,bucketName).orElse(null);
             if(imageEntity!=null){
@@ -108,8 +127,7 @@ public class ImageService {
         } catch (Exception e) {
             e.printStackTrace();
 
-
-            log.error("ActionLog.deleteFile in CompanyService fileName: {}, bucketName: {}", fileName, bucketName);
+            log.error("ActionLog.deleteFile fileName: {}, bucketName: {}", fileName, bucketName);
             throw new RuntimeException(e.getMessage());
         }
     }

@@ -1,12 +1,17 @@
 package com.example.iticketfinal.dto.event;
 
+import com.example.iticketfinal.dao.entity.PerformerEntity;
 import com.example.iticketfinal.dao.entity.TicketEntity;
+import com.example.iticketfinal.dto.image.ImageDto;
+import com.example.iticketfinal.dto.performer.PerformerDto;
 import com.example.iticketfinal.dto.ticket.TicketDto;
+import com.example.iticketfinal.enums.EventCategory;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -22,10 +27,16 @@ public class EventReqDto {
     @NotBlank
     private String description;
     @NotNull
+    private EventCategory category;
+    @NotNull
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime eventDate;
     @NotNull
     private List<TicketDto> tickets;
     @NotBlank
     private Integer companyId;
-    private List<MultipartFile> eventImages;
+    @NotBlank
+    private Integer placeId;
+    private List<ImageDto> images;
+    private List<PerformerDto> performers;
 }
