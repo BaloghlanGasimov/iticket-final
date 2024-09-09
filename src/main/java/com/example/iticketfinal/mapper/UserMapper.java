@@ -25,9 +25,6 @@ public interface UserMapper {
         if(userLoginReqDto.getEmail()!=null){
             userEntity.setEmail(userLoginReqDto.getEmail());
         }
-        if(userLoginReqDto.getPhone()!=null){
-            userEntity.setPhone(userLoginReqDto.getPhone());
-        }
         if(userLoginReqDto.getBirthDate()!=null){
             userEntity.setBirthDate(userLoginReqDto.getBirthDate());
         }

@@ -11,6 +11,8 @@ import com.example.iticketfinal.dto.event.EventRespDto;
 import com.example.iticketfinal.enums.Exceptions;
 import com.example.iticketfinal.exceptions.NotFoundException;
 import com.example.iticketfinal.mapper.EventMapper;
+import com.example.iticketfinal.mapper.PerformerMapper;
+import com.example.iticketfinal.mapper.TicketMapper;
 import com.sun.jdi.request.EventRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -29,6 +32,8 @@ public class EventService {
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
     private final PerformerRepository performerRepository;
+    private final TicketMapper ticketMapper;
+    private final PerformerMapper performerMapper;
 
     public void checkEventExpire(){
         log.info("ActionLog.checkEventExpire.start");
@@ -39,6 +44,27 @@ public class EventService {
         eventRepository.saveAll(expiredEvents);
 
         log.info("ActionLog.checkEventExpire.end");
+    }
+
+    public BaseResponseDto<List<EventRespDto>> getAllEvents(Boolean expired) {
+        log.info("ActionLog.getAllEvents.start");
+
+        List<EventEntity> eventEntities = eventRepository.findAll();
+        var filteredEvents = eventEntities.stream().filter(eventEntity -> eventEntity.getExpired()==null || eventEntity.getExpired().equals(expired)).collect(Collectors.toList());
+        List<EventRespDto> eventRespDtos = filteredEvents.stream().map(eventMapper::mapToRespDto).toList();
+
+        log.info("ActionLog.getAllEvents.end");
+        return BaseResponseDto.success(eventRespDtos);
+    }
+
+    public BaseResponseDto<EventRespDto> getEventById(Long id){
+        log.info("ActionLog.getEventById.start id: {}",id);
+
+        EventEntity event = findEvent(id);
+        EventRespDto eventRespDto = eventMapper.mapToRespDto(event);
+
+        log.info("ActionLog.getEventById.end id: {}",id);
+        return BaseResponseDto.success(eventRespDto);
     }
 
     public void saveEvent(EventReqDto eventReqDto) {
@@ -78,6 +104,43 @@ public class EventService {
         eventRepository.delete(eventEntity);
 
         log.info("ActionLog.saveEvent.end id: {}", id);
+        return BaseResponseDto.success(eventRespDto);
+    }
+
+    public BaseResponseDto<EventRespDto> editEvent(Long id, EventReqDto eventReqDto){
+        log.info("ActionLog.editEvent.start id: {}, eventReqDto: {}", id,eventReqDto);
+        EventEntity eventEntity = findEvent(id);
+
+        if(eventReqDto.getTitle()!=null){
+            eventEntity.setTitle(eventReqDto.getTitle());
+        }
+        if(eventReqDto.getDescription()!=null){
+            eventEntity.setDescription(eventReqDto.getDescription());
+        }
+        if(eventReqDto.getCategory()!=null){
+            eventEntity.setCategory(eventReqDto.getCategory());
+        }
+        if(eventReqDto.getEventDate()!=null){
+            eventEntity.setEventDate(eventReqDto.getEventDate());
+        }
+        if(eventReqDto.getTickets()!=null){
+            List<TicketEntity> ticketEntity = eventReqDto.getTickets().stream().map(ticketMapper::mapToEntity).toList();
+            eventEntity.setTickets(ticketEntity);
+        }
+        if(eventReqDto.getPerformers()!=null){
+            List<PerformerEntity> performerEntities = eventReqDto.getPerformers().stream().map(performerMapper::mapToEntity).toList();
+            eventEntity.setPerformers(performerEntities);
+        }
+        if(eventReqDto.getCompanyId()!=null){
+            CompanyEntity company = companyRepository.findById((long)eventReqDto.getCompanyId()).orElse(null);
+            eventEntity.setCompany(company);
+        }
+        if(eventReqDto.getPlaceId()!=null){
+            PlaceEntity place = placeRepository.findById((long)eventReqDto.getPlaceId()).orElse(null);
+            eventEntity.setPlace(place);
+        }
+        EventRespDto eventRespDto = eventMapper.mapToRespDto(eventEntity);
+        log.info("ActionLog.editEvent.end id: {}, eventReqDto: {}", id,eventReqDto);
         return BaseResponseDto.success(eventRespDto);
     }
 

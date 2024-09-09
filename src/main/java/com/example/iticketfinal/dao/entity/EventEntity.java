@@ -22,7 +22,7 @@ public class EventEntity {
     private Long id;
     private String title;
     private String description;
-    private boolean expired;
+    private Boolean expired=false;
     @Enumerated(EnumType.STRING)
     private EventCategory category;
     private LocalDateTime eventDate;

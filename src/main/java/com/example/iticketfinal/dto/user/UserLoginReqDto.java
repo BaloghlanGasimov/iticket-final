@@ -22,7 +22,6 @@ public class UserLoginReqDto {
     private String name;
     private String surname;
     private String email;
-    private String phone;
     private LocalDate birthDate;
     private Gender gender;
     private Integer countryId;

@@ -49,7 +49,22 @@ public class UserService {
         log.info("ActionLog.updateUser.start id: {}, userLoginReqDto: {}",id,userLoginReqDto);
 
         UserEntity userEntity = findUser(id);
-        userEntity = userMapper.mapUpdatingToEntity(userEntity,userLoginReqDto);
+
+        if(userLoginReqDto.getName()!=null){
+            userEntity.setName(userLoginReqDto.getName());
+        }
+        if(userLoginReqDto.getSurname()!=null){
+            userEntity.setSurname(userLoginReqDto.getSurname());
+        }
+        if(userLoginReqDto.getEmail()!=null){
+            userEntity.setEmail(userLoginReqDto.getEmail());
+        }
+        if(userLoginReqDto.getBirthDate()!=null){
+            userEntity.setBirthDate(userLoginReqDto.getBirthDate());
+        }
+        if(userLoginReqDto.getGender()!=null){
+            userEntity.setGender(userLoginReqDto.getGender());
+        }
         if(userLoginReqDto.getCountryId()!=null){
             CountryEntity countryEntity = countryRepository.findById((long)userLoginReqDto.getCountryId())
                     .orElse(null);

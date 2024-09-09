@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class EventExpireDateSchedule {
     private final EventService eventService;
 
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 1 * * * *")
     public void checkEventExpireDateSchedule() {
         log.info("ActionLog.checkEventExpireDateSchedule.start");
 
