@@ -5,7 +5,11 @@ import com.example.iticketfinal.dao.repository.CompanyRepository;
 import com.example.iticketfinal.dao.repository.EventRepository;
 import com.example.iticketfinal.dao.repository.PerformerRepository;
 import com.example.iticketfinal.dao.repository.PlaceRepository;
+import com.example.iticketfinal.dto.BaseResponseDto;
 import com.example.iticketfinal.dto.event.EventReqDto;
+import com.example.iticketfinal.dto.event.EventRespDto;
+import com.example.iticketfinal.enums.Exceptions;
+import com.example.iticketfinal.exceptions.NotFoundException;
 import com.example.iticketfinal.mapper.EventMapper;
 import com.sun.jdi.request.EventRequest;
 import lombok.RequiredArgsConstructor;
@@ -64,6 +68,26 @@ public class EventService {
         eventEntity.setPerformers(performerEntities);
         eventRepository.save(eventEntity);
         log.info("ActionLog.saveEvent.end eventReqDto: {}", eventReqDto);
+    }
+
+    public BaseResponseDto<EventRespDto> deleteEvent(Long id){
+        log.info("ActionLog.deleteEvent.start id: {}", id);
+
+        EventEntity eventEntity = findEvent(id);
+        EventRespDto eventRespDto = eventMapper.mapToRespDto(eventEntity);
+        eventRepository.delete(eventEntity);
+
+        log.info("ActionLog.saveEvent.end id: {}", id);
+        return BaseResponseDto.success(eventRespDto);
+    }
+
+    private EventEntity findEvent(Long id){
+        EventEntity event = eventRepository.findById(id)
+                .orElseThrow(()->new NotFoundException(
+                        Exceptions.EVENT_NOT_FOUND.toString(),
+                        String.format("ActionLog.findEvent.error NotFound Event %d",id)
+                ));
+        return event;
     }
 
 }
