@@ -3,6 +3,7 @@ package com.example.iticketfinal.service;
 import com.example.iticketfinal.dao.entity.CountryEntity;
 import com.example.iticketfinal.dao.entity.PhoneEntity;
 import com.example.iticketfinal.dao.entity.UserEntity;
+import com.example.iticketfinal.dao.entity.WalletEntity;
 import com.example.iticketfinal.dao.repository.CountryRepository;
 import com.example.iticketfinal.dao.repository.UserRepository;
 import com.example.iticketfinal.dto.BaseResponseDto;
@@ -115,6 +116,22 @@ public class UserService {
 
         log.info("ActionLog.deleteUser.end id: {}",id);
         return BaseResponseDto.success(userRespDto);
+    }
+
+    public BaseResponseDto<UserRespDto> addToWallet(Long id, double money){
+        log.info("ActionLog.addToWallet.start id: {} money: {}",id,money);
+
+        UserEntity user = findUser(id);
+        WalletEntity wallet = user.getWallet();
+        double newBalance = wallet.getBalance()+money;
+        wallet.setBalance(newBalance);
+        user.setWallet(wallet);
+        userRepository.save(user);
+
+        UserRespDto userRespDto = userMapper.mapToRespDto(user);
+        log.info("ActionLog.addToWallet.end id: {} money: {}",id,money);
+
+        return BaseResponseDto.success(userRespDto) ;
     }
 
     private UserEntity findUser(Long id){
