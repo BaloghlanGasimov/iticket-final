@@ -51,4 +51,12 @@ public class UserController {
         return userService.deleteUser(id);
     }
 
+    @PatchMapping("/{id}/wallet/add")
+    public BaseResponseDto<UserRespDto> addToWallet(
+            @PathVariable Long id,
+            @RequestParam double money
+    ){
+        return userService.addToWallet(id,money);
+    }
+
 }
