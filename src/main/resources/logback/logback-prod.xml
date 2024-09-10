@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+    </appender>
+    <root level="info">
+        <appender-ref ref="CONSOLE" />
+    </root>
+    <appender name="CONSOLE" class="net.logstash.logback.appender.LoggingEventAsyncDisruptorAppender">
+
+        <layout class="net.logstash.logback.layout.LogstashAccessLayout">
+        </layout>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>
