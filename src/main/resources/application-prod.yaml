@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5442/iticket_db
+    username: baloghlan
+    password: ${DB_PASS}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+application:
+  client:
+    countriesnow:
+      credentials:
+        url: https://countriesnow.space/api/v0.1/
+
+server:
+  port: 8090

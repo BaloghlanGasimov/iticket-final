@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/images")
 @RequiredArgsConstructor
@@ -20,6 +22,14 @@ public class ImageController {
             @PathVariable String bucketName
     ){
         return imageService.setImageToBucket(image,bucketName);
+    }
+
+    @PostMapping(value = "/multi/{bucketName}",consumes = { "multipart/form-data" })
+    public List<ImageDto> saveMultiImages(
+            @RequestParam("image") List<MultipartFile> images,
+            @PathVariable String bucketName
+    ){
+        return imageService.saveMultiImages(images,bucketName);
     }
 
     @DeleteMapping(value = "/{bucketName}/{imageName}")

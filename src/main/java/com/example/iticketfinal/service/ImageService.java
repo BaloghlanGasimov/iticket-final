@@ -15,15 +15,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class ImageService {
     private final ImageRepository imageRepository;
-    private final ImageMapper imageMapper;
 
     private final MinioClient minioClient;
+
+    public List<ImageDto> saveMultiImages(List<MultipartFile> images,String bucketName) {
+        List<ImageDto> imageDtos = new ArrayList<>();
+        for (int i = 0; i <images.size() ; i++) {
+            imageDtos.add(setImageToBucket(images.get(i), bucketName));
+        }
+        return imageDtos;
+    }
 
     public ImageDto setImageToBucket(MultipartFile image, String bucketName) {
         if (image != null && image.getOriginalFilename() != null) {
