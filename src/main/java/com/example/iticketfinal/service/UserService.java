@@ -1,18 +1,16 @@
 package com.example.iticketfinal.service;
 
-import com.example.iticketfinal.dao.entity.CountryEntity;
-import com.example.iticketfinal.dao.entity.PhoneEntity;
-import com.example.iticketfinal.dao.entity.UserEntity;
-import com.example.iticketfinal.dao.entity.WalletEntity;
-import com.example.iticketfinal.dao.repository.CountryRepository;
-import com.example.iticketfinal.dao.repository.UserRepository;
+import com.example.iticketfinal.dao.entity.*;
+import com.example.iticketfinal.dao.repository.*;
 import com.example.iticketfinal.dto.BaseResponseDto;
 import com.example.iticketfinal.dto.country.CountryDto;
+import com.example.iticketfinal.dto.payment.PaymentReqDto;
 import com.example.iticketfinal.dto.user.UserLoginReqDto;
 import com.example.iticketfinal.dto.user.UserPrimaryLoginReqDto;
 import com.example.iticketfinal.dto.user.UserRespDto;
 import com.example.iticketfinal.enums.Exceptions;
-import com.example.iticketfinal.exceptions.NotFoundException;
+import com.example.iticketfinal.enums.OperationStatus;
+import com.example.iticketfinal.exceptions.*;
 import com.example.iticketfinal.mapper.CountryMapper;
 import com.example.iticketfinal.mapper.PhoneMapper;
 import com.example.iticketfinal.mapper.UserMapper;
@@ -28,6 +26,9 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class UserService {
+    private final PaymentHistoryRepository paymentHistoryRepository;
+    private final TicketRepository ticketRepository;
+    private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final CountryMapper countryMapper;
@@ -122,6 +123,14 @@ public class UserService {
         log.info("ActionLog.addToWallet.start id: {} money: {}",id,money);
 
         UserEntity user = findUser(id);
+
+        if(money<=0){
+            throw new NegativeMoneyException(
+                    "Request money is negative or zero",
+                    String.format("ActionLog.addToWallet.error NegativeMoneyException: money: %f",money)
+            );
+        }
+
         WalletEntity wallet = user.getWallet();
         double newBalance = wallet.getBalance()+money;
         wallet.setBalance(newBalance);
@@ -132,6 +141,87 @@ public class UserService {
         log.info("ActionLog.addToWallet.end id: {} money: {}",id,money);
 
         return BaseResponseDto.success(userRespDto) ;
+    }
+
+    @Transactional
+    public void buyTicketsOfEventByWallet(Long userId, Long eventId, PaymentReqDto paymentReqDto){
+        log.info("ActionLog.buyTicketsOfEventByWallet.start userId: {},eventId: {}, paymentReqDto: {}",userId,eventId,paymentReqDto);
+
+        UserEntity userEntity = findUser(userId);
+
+        EventEntity eventEntity = eventRepository.findById(eventId)
+                .orElseThrow(()->new NotFoundException(
+                        Exceptions.EVENT_NOT_FOUND.toString(),
+                        String.format("ActionLog.buyTicketsOfEventByWallet.error NotFoundEvent eventId: %d",eventId)
+                ));
+
+        TicketEntity wantBuyTicket=null;
+        boolean isNot = true;
+        for(TicketEntity ticket : eventEntity.getTickets()){
+            if(ticket.getCategory().equals(paymentReqDto.getCategory())){
+                wantBuyTicket=ticket;
+                isNot=false;
+                break;
+            }
+        }
+
+        if(isNot){
+            String errorMessage = "That event doesn't have that category ticket";
+            throw new NotCategoryException(
+                    errorMessage,
+                    String.format("ActionLog.buyTicketsOfEventByWallet.error NotCategoryException: eventId: %d,category: %s",eventId,paymentReqDto.getCategory())
+            );
+        }
+
+        Double userMoney = userEntity.getWallet().getBalance();
+        Double totalTicketMoney = wantBuyTicket.getPrice()*paymentReqDto.getCount();
+        PaymentHistoryEntity paymentHistoryEntity = new PaymentHistoryEntity();
+        paymentHistoryEntity.setUser(userEntity);
+        paymentHistoryEntity.setEvent(eventEntity);
+        paymentHistoryEntity.setTicket(wantBuyTicket);
+        paymentHistoryEntity.setTicketCount(paymentReqDto.getCount());
+        paymentHistoryEntity.setTotalPayment(totalTicketMoney);
+
+
+        if(paymentReqDto.getCount()>wantBuyTicket.getCount()){
+            String errorMessage = "Your count is upper than ticket count";
+            paymentHistoryEntity.setErrorMessage(errorMessage);
+            paymentHistoryEntity.setStatus(OperationStatus.FAILURE);
+            paymentHistoryRepository.save(paymentHistoryEntity);
+
+            throw new MaxLimitExceededException(
+                    errorMessage,
+                    String.format("ActionLog.buyTicketsOfEventByWallet.error MaxLimitExceededException: eventId: %d,request count: %d,ticket count: %d",eventId,paymentReqDto.getCount(),wantBuyTicket.getCount())
+            );
+        }
+
+        else if(userMoney<totalTicketMoney){
+            String errorMessage = "Balance is not enough";
+            paymentHistoryEntity.setErrorMessage(errorMessage);
+            paymentHistoryEntity.setStatus(OperationStatus.FAILURE);
+            paymentHistoryRepository.save(paymentHistoryEntity);
+
+            throw new NotEnoughBalanceException(
+                    errorMessage,
+                    String.format("ActionLog.buyTicketsOfEventByWallet.error NotEnoughBalanceException: eventId: %d,user money: %f,totalTicketMoney: %f",eventId,userMoney,totalTicketMoney)
+            );
+        }
+
+        else{
+            Double afterPaymentBalance = userMoney-totalTicketMoney;
+            WalletEntity walletEntity = userEntity.getWallet();
+            walletEntity.setBalance(afterPaymentBalance);
+            userEntity.setWallet(walletEntity);
+
+            Integer afterBuyCount = wantBuyTicket.getCount()-paymentReqDto.getCount();
+            wantBuyTicket.setCount(afterBuyCount);
+            userRepository.save(userEntity);
+            ticketRepository.save(wantBuyTicket);
+            paymentHistoryEntity.setStatus(OperationStatus.SUCCESS);
+            paymentHistoryRepository.save(paymentHistoryEntity);
+        }
+
+        log.info("ActionLog.buyTicketsOfEventByWallet.end userId: {},eventId: {}, paymentReqDto: {}",userId,eventId,paymentReqDto);
     }
 
     private UserEntity findUser(Long id){

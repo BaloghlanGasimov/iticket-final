@@ -1,6 +1,7 @@
 package com.example.iticketfinal.controller;
 
 import com.example.iticketfinal.dto.BaseResponseDto;
+import com.example.iticketfinal.dto.payment.PaymentReqDto;
 import com.example.iticketfinal.dto.user.UserLoginReqDto;
 import com.example.iticketfinal.dto.user.UserPrimaryLoginReqDto;
 import com.example.iticketfinal.dto.user.UserRespDto;
@@ -57,6 +58,15 @@ public class UserController {
             @RequestParam double money
     ){
         return userService.addToWallet(id,money);
+    }
+
+    @PostMapping("/{userId}/buy/events/{eventId}/ticket")
+    public void buyTicketsOfEventByWallet(
+            @PathVariable Long userId,
+            @PathVariable Long eventId,
+            @Valid @RequestBody PaymentReqDto paymentReqDto
+            ){
+        userService.buyTicketsOfEventByWallet(userId,eventId,paymentReqDto);
     }
 
 }

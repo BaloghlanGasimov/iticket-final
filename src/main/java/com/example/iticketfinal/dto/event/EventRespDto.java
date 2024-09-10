@@ -20,6 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EventRespDto {
+    private Long id;
     private String title;
     private String description;
     private EventCategory category;
