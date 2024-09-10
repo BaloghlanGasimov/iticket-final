@@ -5,9 +5,15 @@ spring:
     password: baloghlan1234
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+application:
+  client:
+    countriesnow:
+      credentials:
+        url: https://countriesnow.space/api/v0.1/
+
 server:
   port: 8080

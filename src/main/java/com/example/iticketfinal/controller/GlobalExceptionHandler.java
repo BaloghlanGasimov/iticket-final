@@ -1,8 +1,7 @@
 package com.example.iticketfinal.controller;
 
 import com.example.iticketfinal.dto.exception.ExceptionDto;
-import com.example.iticketfinal.exceptions.NotFoundException;
-import com.example.iticketfinal.exceptions.WrongFileNameException;
+import com.example.iticketfinal.exceptions.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -43,6 +42,33 @@ public class GlobalExceptionHandler {
         return new ExceptionDto("Invalid file name:" + e.getErrorMessage());
     }
 
+    @ExceptionHandler(MaxLimitExceededException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionDto handler(MaxLimitExceededException e){
+        log.error(e.getLogMessage());
+        return new ExceptionDto(e.getErrorMessage());
+    }
+
+    @ExceptionHandler(NegativeMoneyException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionDto handler(NegativeMoneyException e){
+        log.error(e.getLogMessage());
+        return new ExceptionDto(e.getErrorMessage());
+    }
+
+    @ExceptionHandler(NotCategoryException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionDto handler(NotCategoryException e){
+        log.error(e.getLogMessage());
+        return new ExceptionDto(e.getErrorMessage());
+    }
+
+    @ExceptionHandler(NotEnoughBalanceException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionDto handler(NotEnoughBalanceException e){
+        log.error(e.getLogMessage());
+        return new ExceptionDto(e.getErrorMessage());
+    }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
