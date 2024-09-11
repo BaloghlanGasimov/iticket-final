@@ -37,10 +37,6 @@ public class UserEntity {
     @OneToOne(cascade = CascadeType.ALL)
     private WalletEntity wallet;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private List<PurchaseHistoryEntity> purchaseHistory;
-
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<PhoneEntity> phones;
 

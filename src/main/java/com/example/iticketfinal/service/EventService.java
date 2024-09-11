@@ -50,7 +50,7 @@ public class EventService {
         log.info("ActionLog.getAllEvents.start");
 
         List<EventEntity> eventEntities = eventRepository.findAll();
-        var filteredEvents = eventEntities.stream().filter(eventEntity -> eventEntity.getExpired()==null || eventEntity.getExpired().equals(expired)).collect(Collectors.toList());
+        var filteredEvents = eventEntities.stream().filter(eventEntity -> expired==null || eventEntity.getExpired().equals(expired)).collect(Collectors.toList());
         List<EventRespDto> eventRespDtos = filteredEvents.stream().map(eventMapper::mapToRespDto).toList();
 
         log.info("ActionLog.getAllEvents.end");
