@@ -14,6 +14,7 @@ import com.example.iticketfinal.exceptions.*;
 import com.example.iticketfinal.mapper.CountryMapper;
 import com.example.iticketfinal.mapper.PhoneMapper;
 import com.example.iticketfinal.mapper.UserMapper;
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,7 @@ public class UserService {
     private final CountryMapper countryMapper;
     private final CountryRepository countryRepository;
     private final PhoneMapper phoneMapper;
+    private final EmailService emailService;
 
     public BaseResponseDto<UserRespDto> saveUserPrimary(UserPrimaryLoginReqDto userPrimaryLoginReqDto){
         log.info("ActionLog.saveUser.start userPrimaryLoginReqDto: {}",userPrimaryLoginReqDto);
@@ -219,6 +221,15 @@ public class UserService {
             ticketRepository.save(wantBuyTicket);
             paymentHistoryEntity.setStatus(OperationStatus.SUCCESS);
             paymentHistoryRepository.save(paymentHistoryEntity);
+
+            try {
+//                emailService.postEmailWithAttachment(userEntity.getEmail(),"Your tickets","Thanks for buying");
+                for (int i = 0; i < paymentReqDto.getCount(); i++) {
+                    emailService.postEmailWithAttachmentv2(userEntity.getEmail(),"Your tickets",eventEntity.getTitle(),wantBuyTicket.getCategory().toString(),wantBuyTicket.getPrice());
+                }
+            } catch (MessagingException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         log.info("ActionLog.buyTicketsOfEventByWallet.end userId: {},eventId: {}, paymentReqDto: {}",userId,eventId,paymentReqDto);
