@@ -15,5 +15,15 @@ application:
       credentials:
         url: https://countriesnow.space/api/v0.1/
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
 server:
   port: 8090

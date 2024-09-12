@@ -46,21 +46,22 @@ services:
   loki:
     image: grafana/loki:2.8.1
     container_name: loki
-    command: -config.file=/etc/loki/local-config.yaml
+    command: -config.file=/etc/loki/loki-config.yaml
     ports:
       - "3100:3100"
     volumes:
-      - ./loki-config.yaml:/etc/loki/local-config.yaml
+      - ./src/main/resources/loki/loki-config.yaml:/etc/loki/loki-config.yaml
+      - ./path/on/host/tmp/loki:/tmp/loki
     networks:
       - backend-network
 
   promtail:
     image: grafana/promtail:2.8.1
     container_name: promtail
-    command: -config.file=/etc/promtail/promtail-config.yaml
+    command: -config.file=/etc/promtail/promtail-config.yaml -config.expand-env=true
     volumes:
       - /var/log:/var/log
-      - ./promtail-config.yaml:/etc/promtail/promtail-config.yaml
+      - ./src/main/resources/promtail/promtail-config.yaml:/etc/promtail/promtail-config.yaml
     networks:
       - backend-network
 
