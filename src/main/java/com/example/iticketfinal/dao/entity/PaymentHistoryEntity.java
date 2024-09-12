@@ -23,6 +23,12 @@ public class PaymentHistoryEntity {
     private Integer ticketCount;
     private String errorMessage;
 
+    @CreationTimestamp
+    private LocalDateTime created;
+
+    @Enumerated(EnumType.STRING)
+    private OperationStatus status;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private UserEntity user;
@@ -34,11 +40,6 @@ public class PaymentHistoryEntity {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "event_id")
     private EventEntity event;
-    @CreationTimestamp
-    private LocalDateTime created;
-
-    @Enumerated(EnumType.STRING)
-    private OperationStatus status;
 
 }
 

@@ -9,6 +9,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+  liquibase:
+    change-log: classpath:liquibase/changelog-master.yaml
   mail:
     host: smtp.gmail.com
     port: 587
@@ -26,6 +28,7 @@ application:
     countriesnow:
       credentials:
         url: https://countriesnow.space/api/v0.1/
+
 management:
   endpoints:
     web:
