@@ -30,6 +30,40 @@ services:
     networks:
       - backend-network
 
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - loki
+    environment:
+      - GF_SECURITY_ADMIN_USER=baloghlan
+      - GF_SECURITY_ADMIN_PASSWORD=baloghlan1234
+    networks:
+      - backend-network
+
+  loki:
+    image: grafana/loki:2.8.1
+    container_name: loki
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yaml
+    networks:
+      - backend-network
+
+  promtail:
+    image: grafana/promtail:2.8.1
+    container_name: promtail
+    command: -config.file=/etc/promtail/promtail-config.yaml
+    volumes:
+      - /var/log:/var/log
+      - ./promtail-config.yaml:/etc/promtail/promtail-config.yaml
+    networks:
+      - backend-network
+
 volumes:
   postgres_data:
   minio_data:
