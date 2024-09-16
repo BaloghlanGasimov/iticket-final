@@ -18,7 +18,7 @@ public class CountriesnowErrorDecoder implements ErrorDecoder {
                 break;
             case 404:
                 logger.error("Not Found: {}", response.request().url());
-                return new NotFoundException("Not found: " + response.request().url(),"Action.gitlabClient.error");
+                return new NotFoundException("Not found: " + response.request().url(), "Action.gitlabClient.error");
             case 500:
                 logger.error("Internal Server Error: {}", response.request().url());
                 break;

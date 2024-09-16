@@ -5,11 +5,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Value;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -36,14 +34,14 @@ public class CompanyEntity {
     @JoinColumn(name = "image_id")
     private ImageEntity logo;
 
-    @OneToMany(mappedBy = "company",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
     private List<PhoneEntity> phones;
 
-    @OneToMany(mappedBy = "company",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
     private List<EventEntity> events;
 
     @PreUpdate
-    public void onUpdate(){
+    public void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 }

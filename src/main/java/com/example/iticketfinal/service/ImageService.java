@@ -5,7 +5,6 @@ import com.example.iticketfinal.dao.repository.ImageRepository;
 import com.example.iticketfinal.dto.image.ImageDto;
 import com.example.iticketfinal.enums.Exceptions;
 import com.example.iticketfinal.exceptions.WrongFileNameException;
-import com.example.iticketfinal.mapper.ImageMapper;
 import com.example.iticketfinal.util.StringUtil;
 import io.minio.*;
 import io.minio.http.Method;
@@ -13,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -26,9 +26,9 @@ public class ImageService {
 
     private final MinioClient minioClient;
 
-    public List<ImageDto> saveMultiImages(List<MultipartFile> images,String bucketName) {
+    public List<ImageDto> saveMultiImages(List<MultipartFile> images, String bucketName) {
         List<ImageDto> imageDtos = new ArrayList<>();
-        for (int i = 0; i <images.size() ; i++) {
+        for (int i = 0; i < images.size(); i++) {
             imageDtos.add(setImageToBucket(images.get(i), bucketName));
         }
         return imageDtos;
@@ -40,7 +40,7 @@ public class ImageService {
             if (imageDividedName == null) {
                 throw new WrongFileNameException(
                         Exceptions.WRONG_FILE_NAME.toString(),
-                        String.format("ActionLog.setImageToBucket.error WrongFileName: %s",image.getOriginalFilename())
+                        String.format("ActionLog.setImageToBucket.error WrongFileName: %s", image.getOriginalFilename())
                 );
             }
             String originalName = imageDividedName[0];
@@ -52,7 +52,7 @@ public class ImageService {
             String cleanedOriginalName = StringUtil.removeSpaces(originalName);
             String imageName = cleanedOriginalName + "_" + formattedDateTime + "." + extension;
 
-            ImageDto imageDto =null;
+            ImageDto imageDto = null;
             try {
                 if (!checkBucketHas(bucketName)) {
                     minioClient.makeBucket(
@@ -92,10 +92,10 @@ public class ImageService {
 
 //                imageDto = imageMapper.mapToDto(imageEntity);
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 log.error("ActionLog.setImageToBucket.error Can't file to minio and take imageEntity," +
                         " fileName: {}" +
-                        ", bucketName: {}",image.getOriginalFilename(),bucketName);
+                        ", bucketName: {}", image.getOriginalFilename(), bucketName);
             }
 
 
@@ -119,10 +119,10 @@ public class ImageService {
         }
     }
 
-    public void deleteFile(String bucketName,String fileName) {
+    public void deleteFile(String bucketName, String fileName) {
         try {
-            ImageEntity imageEntity =imageRepository.findByNameAndBucket(fileName,bucketName).orElse(null);
-            if(imageEntity!=null){
+            ImageEntity imageEntity = imageRepository.findByNameAndBucket(fileName, bucketName).orElse(null);
+            if (imageEntity != null) {
                 imageRepository.delete(imageEntity);
             }
 

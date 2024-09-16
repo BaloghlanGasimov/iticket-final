@@ -39,13 +39,13 @@ public class PlaceController {
             @PathVariable Long id,
             @RequestBody @Valid PlaceDto placeDto
     ) {
-        placeService.updatePlace(id,placeDto);
+        placeService.updatePlace(id, placeDto);
     }
 
     @DeleteMapping("/{id}")
     public BaseResponseDto<PlaceDto> deletePlace(
             @PathVariable Long id
     ) {
-       return placeService.deletePlace(id);
+        return placeService.deletePlace(id);
     }
 }

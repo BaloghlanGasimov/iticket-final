@@ -21,7 +21,7 @@ public class UserController {
     @PostMapping("/primary")
     public BaseResponseDto<UserRespDto> saveUserPrimary(
             @Valid @RequestBody UserPrimaryLoginReqDto userPrimaryLoginReqDto
-    ){
+    ) {
         return userService.saveUserPrimary(userPrimaryLoginReqDto);
     }
 
@@ -29,26 +29,26 @@ public class UserController {
     public BaseResponseDto<UserRespDto> updateUser(
             @PathVariable Long id,
             @Valid @RequestBody UserLoginReqDto userLoginReqDto
-            ){
-        return userService.updateUser(id,userLoginReqDto);
+    ) {
+        return userService.updateUser(id, userLoginReqDto);
     }
 
     @GetMapping
-    public BaseResponseDto<List<UserRespDto>> getUsers(){
+    public BaseResponseDto<List<UserRespDto>> getUsers() {
         return userService.getUsers();
     }
 
     @GetMapping("/{id}")
     public BaseResponseDto<UserRespDto> getUserById(
             @PathVariable Long id
-    ){
+    ) {
         return userService.getUserById(id);
     }
 
     @DeleteMapping("/{id}")
     public BaseResponseDto<UserRespDto> deleteUser(
             @PathVariable Long id
-    ){
+    ) {
         return userService.deleteUser(id);
     }
 
@@ -56,8 +56,8 @@ public class UserController {
     public BaseResponseDto<UserRespDto> addToWallet(
             @PathVariable Long id,
             @RequestParam double money
-    ){
-        return userService.addToWallet(id,money);
+    ) {
+        return userService.addToWallet(id, money);
     }
 
     @PostMapping("/{userId}/buy/events/{eventId}/ticket")
@@ -65,8 +65,8 @@ public class UserController {
             @PathVariable Long userId,
             @PathVariable Long eventId,
             @Valid @RequestBody PaymentReqDto paymentReqDto
-            ){
-        userService.buyTicketsOfEventByWallet(userId,eventId,paymentReqDto);
+    ) {
+        userService.buyTicketsOfEventByWallet(userId, eventId, paymentReqDto);
     }
 
 }

@@ -12,7 +12,6 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.util.ByteArrayDataSource;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -20,6 +19,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import com.itextpdf.layout.Document;
+
 import java.io.ByteArrayOutputStream;
 import java.util.UUID;
 
@@ -28,13 +28,10 @@ import java.util.UUID;
 @Slf4j
 public class EmailService {
 
-//    @Value("${spring.mail.username}")
-//    private String mailUsername;
-
     private final JavaMailSender mailSender;
 
-    public void postEmail(String adress , String subject , String body){
-        log.info("ACTION.postEmail.start adress : {} | subject : {}" , adress , subject);
+    public void postEmail(String adress, String subject, String body) {
+        log.info("ACTION.postEmail.start adress : {} | subject : {}", adress, subject);
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(System.getenv("mail_username"));
         message.setTo(adress);
@@ -72,7 +69,7 @@ public class EmailService {
         helper.setText(body);
 
         // Attach the PDF as a byte array
-        helper.addAttachment("ticket.pdf"+ UUID.randomUUID(), new ByteArrayDataSource(pdfOutputStream.toByteArray(), "application/pdf"));
+        helper.addAttachment("ticket.pdf" + UUID.randomUUID(), new ByteArrayDataSource(pdfOutputStream.toByteArray(), "application/pdf"));
 
         mailSender.send(mimeMessage);
 

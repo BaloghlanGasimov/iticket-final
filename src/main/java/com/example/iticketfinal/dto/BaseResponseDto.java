@@ -15,7 +15,7 @@ public class BaseResponseDto<T> {
     private String messageId;
     private T data;
 
-    public BaseResponseDto(boolean success, String message,T data) {
+    public BaseResponseDto(boolean success, String message, T data) {
         this.success = success;
         this.message = message;
         this.messageId = UUID.randomUUID().toString();
@@ -23,12 +23,14 @@ public class BaseResponseDto<T> {
     }
 
     public static <T> BaseResponseDto<T> success(T data) {
-        return new BaseResponseDto<>(true,"Operation successful", data);
+        return new BaseResponseDto<>(true, "Operation successful", data);
     }
-    public static <T> BaseResponseDto<T> success(T data,String message) {
-        return new BaseResponseDto<>(true,message, data);
+
+    public static <T> BaseResponseDto<T> success(T data, String message) {
+        return new BaseResponseDto<>(true, message, data);
     }
+
     public static <T> BaseResponseDto<T> error(String message) {
-        return new BaseResponseDto<>(false,message, null);
+        return new BaseResponseDto<>(false, message, null);
     }
 }

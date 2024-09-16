@@ -11,6 +11,7 @@ public class StringUtil {
         }
         return input.replaceAll("\\s+", "");
     }
+
     public static String[] divideFilename(String filename) {
         if (filename == null || !filename.contains(".")) {
             return null;

@@ -3,12 +3,12 @@ spring:
     url: jdbc:postgresql://localhost:5442/iticket_db
     username: baloghlan
     password: baloghlan1234
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.PostgreSQLDialect
   liquibase:
     change-log: classpath:liquibase/changelog-master.yaml
   mail:

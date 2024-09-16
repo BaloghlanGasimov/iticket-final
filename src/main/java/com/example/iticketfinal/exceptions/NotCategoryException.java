@@ -10,9 +10,9 @@ public class NotCategoryException extends RuntimeException {
     private String errorMessage;
     private String logMessage;
 
-    public NotCategoryException(String errorMessage, String logMessage){
+    public NotCategoryException(String errorMessage, String logMessage) {
         super(errorMessage);
-        this.errorMessage=errorMessage;
-        this.logMessage=logMessage;
+        this.errorMessage = errorMessage;
+        this.logMessage = logMessage;
     }
 }
