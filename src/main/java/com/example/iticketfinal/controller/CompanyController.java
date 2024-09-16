@@ -9,6 +9,7 @@ import com.example.iticketfinal.service.CompanyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -36,7 +37,7 @@ public class CompanyController {
     @PostMapping("/primary")
     public BaseResponseDto<CompanyRespDto> savePrimaryCompany(
             @RequestBody @Valid CompanyPrimaryLoginReqDto companyLoginReqDto
-            ) {
+    ) {
         return companyService.savePrimaryCompany(companyLoginReqDto);
     }
 
@@ -45,21 +46,21 @@ public class CompanyController {
             @PathVariable Long id,
             @RequestParam Status status
     ) {
-        companyService.changeStatus(id,status);
+        companyService.changeStatus(id, status);
     }
 
     @PutMapping("/{id}")
     public CompanyRespDto updateCompany(
             @PathVariable Long id,
             @Valid @RequestBody CompanyLoginReqDto companyLoginReqDto
-            ){
-        return companyService.updateCompany(id,companyLoginReqDto);
+    ) {
+        return companyService.updateCompany(id, companyLoginReqDto);
     }
 
     @DeleteMapping("/{id}")
     public BaseResponseDto<CompanyRespDto> deleteCompany(
             @PathVariable Long id
-    ){
+    ) {
         return companyService.deleteCompany(id);
     }
 

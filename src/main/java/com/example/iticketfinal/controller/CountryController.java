@@ -6,7 +6,6 @@ import com.example.iticketfinal.dto.country.CountryDto;
 import com.example.iticketfinal.service.CountryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,12 +19,12 @@ public class CountryController {
     private final CountryService countryService;
 
     @GetMapping("/client")
-    public CountriesnowBaseResp getCountries(){
+    public CountriesnowBaseResp getCountries() {
         return countriesnowClient.getCountries();
     }
 
     @GetMapping("/db")
-    public List<CountryDto> saveAndGetCountries(){
+    public List<CountryDto> saveAndGetCountries() {
         return countryService.saveAndGetCountries();
     }
 

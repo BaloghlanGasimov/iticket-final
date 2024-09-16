@@ -13,7 +13,6 @@ import java.util.List;
 @Table(name = "users")
 @Data
 @AllArgsConstructor
-//@NoArgsConstructor
 public class UserEntity {
 
     @Id
@@ -33,7 +32,7 @@ public class UserEntity {
     @OneToOne(cascade = CascadeType.ALL)
     private WalletEntity wallet;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<PhoneEntity> phones;
 
     public UserEntity() {

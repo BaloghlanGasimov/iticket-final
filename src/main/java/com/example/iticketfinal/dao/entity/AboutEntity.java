@@ -2,18 +2,22 @@ package com.example.iticketfinal.dao.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Table(name = "wallets")
-@Data
+@Table(name = "about")
 @AllArgsConstructor
 @NoArgsConstructor
-public class WalletEntity {
+@Getter
+@Setter
+public class AboutEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Double balance = 0.0;
+    private String title;
+    private String description;
+
 }

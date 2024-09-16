@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @FeignClient(
         name = "countriesnow",
-        url="${application.client.countriesnow.credentials.url}",
+        url = "${application.client.countriesnow.credentials.url}",
         configuration = CountriesnowClient.FeignConfiguration.class
 )
 public interface CountriesnowClient {
@@ -37,6 +37,7 @@ public interface CountriesnowClient {
         public ErrorDecoder errorDecoder() {
             return new CountriesnowErrorDecoder();
         }
+
         @Bean
         Logger.Level feignLoggerLevel() {
             return Logger.Level.FULL;
