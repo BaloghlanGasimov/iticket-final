@@ -30,10 +30,6 @@ public class UserEntity {
     @JoinColumn(name = "country_id")
     private CountryEntity country;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private List<OrderEntity> orders;
-
     @OneToOne(cascade = CascadeType.ALL)
     private WalletEntity wallet;
 
