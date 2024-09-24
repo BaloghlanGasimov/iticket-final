@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5454/postgres
-    username: postgres
-    password: password
+    url: jdbc:postgresql://localhost:5442/iticket_db
+    username: baloghlan
+    password: baloghlan1234
 #  jpa:
 #    hibernate:
 #      ddl-auto: update

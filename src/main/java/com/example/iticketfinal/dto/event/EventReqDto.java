@@ -2,7 +2,7 @@ package com.example.iticketfinal.dto.event;
 
 import com.example.iticketfinal.dto.image.ImageDto;
 import com.example.iticketfinal.dto.performer.PerformerDto;
-import com.example.iticketfinal.dto.ticket.TicketDto;
+import com.example.iticketfinal.dto.ticket.TicketReqDto;
 import com.example.iticketfinal.enums.EventCategory;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -29,7 +29,7 @@ public class EventReqDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime eventDate;
     @NotNull
-    private List<TicketDto> tickets;
+    private List<TicketReqDto> tickets;
     @NotBlank
     private Integer companyId;
     @NotBlank
