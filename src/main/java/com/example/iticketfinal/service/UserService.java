@@ -11,12 +11,14 @@ import com.example.iticketfinal.dto.user.UserPrimaryLoginReqDto;
 import com.example.iticketfinal.dto.user.UserRespDto;
 import com.example.iticketfinal.enums.Exceptions;
 import com.example.iticketfinal.enums.OperationStatus;
+import com.example.iticketfinal.enums.Roles;
 import com.example.iticketfinal.exceptions.*;
 import com.example.iticketfinal.mapper.CommonMapper;
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,16 +35,30 @@ public class UserService {
     private final CommonMapper commonMapper;
     private final CountryRepository countryRepository;
     private final EmailService emailService;
+    private final PasswordEncoder passwordEncoder;
 
     public BaseResponseDto<UserRespDto> saveUserPrimary(UserPrimaryLoginReqDto userPrimaryLoginReqDto) {
         log.info("ActionLog.saveUser.start userPrimaryLoginReqDto: {}", userPrimaryLoginReqDto);
 
-        UserEntity userEntity = commonMapper.mapToEntity(userPrimaryLoginReqDto);
-        userRepository.save(userEntity);
-        UserRespDto userRespDto = commonMapper.mapToRespDto(userEntity);
+        UserEntity checkUserEntity = userRepository.findByEmail(userPrimaryLoginReqDto.getEmail())
+                .orElse(null);
 
-        log.info("ActionLog.saveUser.end userPrimaryLoginReqDto: {}", userPrimaryLoginReqDto);
-        return BaseResponseDto.success(userRespDto);
+        if(checkUserEntity == null) {
+            UserEntity userEntity = commonMapper.mapToEntity(userPrimaryLoginReqDto);
+            userEntity.setRole(Roles.USER);
+            userEntity.setPassword(passwordEncoder.encode(userPrimaryLoginReqDto.getPassword()));
+            userRepository.save(userEntity);
+            UserRespDto userRespDto = commonMapper.mapToRespDto(userEntity);
+
+            log.info("ActionLog.saveUser.end userPrimaryLoginReqDto: {}", userPrimaryLoginReqDto);
+            return BaseResponseDto.success(userRespDto);
+
+        }else{
+            throw new UserRegisteredException(
+                    Exceptions.EMAIL_REGISTERED.name(),
+                    String.format("ActionLog.saveUserPrimary.error email:%s",userPrimaryLoginReqDto.getEmail())
+            );
+        }
     }
 
     @Transactional

@@ -16,4 +16,7 @@ public class UserPrimaryLoginReqDto {
     private String surname;
     @Email
     private String email;
+    @NotNull
+    private String password;
+
 }

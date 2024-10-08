@@ -20,6 +20,7 @@ public class UserRespDto {
     private String name;
     private String surname;
     private String email;
+    private String password;
     private String phone;
     private LocalDate birthDate;
     private Gender gender;

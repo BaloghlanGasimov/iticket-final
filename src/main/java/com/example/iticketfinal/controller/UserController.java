@@ -21,7 +21,7 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("/primary")
+    @PostMapping("/register/primary")
     public BaseResponseDto<UserRespDto> saveUserPrimary(
             @Valid @RequestBody UserPrimaryLoginReqDto userPrimaryLoginReqDto
     ) {

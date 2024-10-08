@@ -71,6 +71,8 @@ CREATE TABLE users (
     name VARCHAR(255),
     surname VARCHAR(255),
     email VARCHAR(255),
+    password VARCHAR(255),
+    role VARCHAR(255),
     birth_date DATE,
     gender VARCHAR(255)
 );

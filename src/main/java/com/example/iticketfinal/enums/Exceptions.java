@@ -6,5 +6,6 @@ public enum Exceptions {
     PLACE_NOT_FOUND,
     WRONG_FILE_NAME,
     EVENT_NOT_FOUND,
-    ABOUT_NOT_FOUND
+    ABOUT_NOT_FOUND,
+    EMAIL_REGISTERED
 }
