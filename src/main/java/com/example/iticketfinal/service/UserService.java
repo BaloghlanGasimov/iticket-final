@@ -4,6 +4,8 @@ import com.example.iticketfinal.dao.entity.*;
 import com.example.iticketfinal.dao.repository.*;
 import com.example.iticketfinal.dto.BaseResponseDto;
 import com.example.iticketfinal.dto.payment.PaymentReqDto;
+import com.example.iticketfinal.dto.payment.PaymentRespDto;
+import com.example.iticketfinal.dto.ticket.TicketRespDto;
 import com.example.iticketfinal.dto.user.UserLoginReqDto;
 import com.example.iticketfinal.dto.user.UserPrimaryLoginReqDto;
 import com.example.iticketfinal.dto.user.UserRespDto;
@@ -11,7 +13,6 @@ import com.example.iticketfinal.enums.Exceptions;
 import com.example.iticketfinal.enums.OperationStatus;
 import com.example.iticketfinal.exceptions.*;
 import com.example.iticketfinal.mapper.CommonMapper;
-import com.example.iticketfinal.mapper.PhoneMapper;
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final CommonMapper commonMapper;
     private final CountryRepository countryRepository;
-    private final PhoneMapper phoneMapper;
     private final EmailService emailService;
 
     public BaseResponseDto<UserRespDto> saveUserPrimary(UserPrimaryLoginReqDto userPrimaryLoginReqDto) {
@@ -73,7 +73,7 @@ public class UserService {
             userEntity.setCountry(countryEntity);
         }
         if (userLoginReqDto.getPhones() != null) {
-            List<PhoneEntity> phones = userLoginReqDto.getPhones().stream().map(phoneMapper::mapToEntity).collect(Collectors.toList());
+            List<PhoneEntity> phones = userLoginReqDto.getPhones().stream().map(commonMapper::mapToEntity).collect(Collectors.toList());
             for (PhoneEntity phone : phones) {
                 phone.setUser(userEntity);
             }
@@ -106,6 +106,17 @@ public class UserService {
         return BaseResponseDto.success(userRespDto);
     }
 
+    public BaseResponseDto<List<PaymentRespDto>> getPaymentTicketUser(Long id,OperationStatus status){
+        log.info("ActionLog.getPurchasedTicketUser.start id: {}", id);
+
+        UserEntity userEntity = findUser(id);
+        List<PaymentHistoryEntity> paymentHistoryEntities = paymentHistoryRepository.findByUserId(id);
+        paymentHistoryEntities.stream().filter((payment)-> payment==null || payment.getStatus()==status);
+        List<PaymentRespDto> paymentRespDtos = paymentHistoryEntities.stream().map(commonMapper::mapToDto).toList();
+
+        log.info("ActionLog.getPurchasedTicketUser.end id: {}", id);
+        return BaseResponseDto.success(paymentRespDtos);
+    }
 
     public BaseResponseDto<UserRespDto> deleteUser(Long id) {
         log.info("ActionLog.deleteUser.start id: {}", id);

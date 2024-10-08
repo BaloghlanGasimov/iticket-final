@@ -9,15 +9,16 @@ import com.example.iticketfinal.dto.country.CountryDto;
 import com.example.iticketfinal.dto.event.EventReqDto;
 import com.example.iticketfinal.dto.event.EventRespDto;
 import com.example.iticketfinal.dto.image.ImageDto;
+import com.example.iticketfinal.dto.payment.PaymentRespDto;
 import com.example.iticketfinal.dto.performer.PerformerDto;
 import com.example.iticketfinal.dto.phone.PhoneReqDto;
 import com.example.iticketfinal.dto.place.PlaceDto;
-import com.example.iticketfinal.dto.ticket.TicketDto;
+import com.example.iticketfinal.dto.ticket.TicketReqDto;
 import com.example.iticketfinal.dto.user.UserPrimaryLoginReqDto;
 import com.example.iticketfinal.dto.user.UserRespDto;
 import org.mapstruct.Mapper;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface CommonMapper {
 
     AboutDto mapToDto(AboutEntity aboutEntity);
@@ -57,6 +58,7 @@ public interface CommonMapper {
     PlaceEntity mapToEntity(PlaceDto placeDto);
 
     PlaceDto mapToDto(PlaceEntity placeEntity);
+    PaymentRespDto mapToDto(PaymentHistoryEntity paymentHistoryEntity);
 
     default PlaceEntity mapUpdatingToEntity(PlaceEntity place, PlaceDto placeDto) {
 
@@ -73,9 +75,9 @@ public interface CommonMapper {
         return place;
     }
 
-    TicketEntity mapToEntity(TicketDto ticket);
+    TicketEntity mapToEntity(TicketReqDto ticket);
 
-    TicketDto mapToDto(TicketEntity ticket);
+    TicketReqDto mapToDto(TicketEntity ticket);
 
     UserEntity mapToEntity(UserPrimaryLoginReqDto userPrimaryLoginReqDto);
 

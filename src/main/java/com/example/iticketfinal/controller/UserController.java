@@ -2,9 +2,12 @@ package com.example.iticketfinal.controller;
 
 import com.example.iticketfinal.dto.BaseResponseDto;
 import com.example.iticketfinal.dto.payment.PaymentReqDto;
+import com.example.iticketfinal.dto.payment.PaymentRespDto;
+import com.example.iticketfinal.dto.ticket.TicketRespDto;
 import com.example.iticketfinal.dto.user.UserLoginReqDto;
 import com.example.iticketfinal.dto.user.UserPrimaryLoginReqDto;
 import com.example.iticketfinal.dto.user.UserRespDto;
+import com.example.iticketfinal.enums.OperationStatus;
 import com.example.iticketfinal.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +46,14 @@ public class UserController {
             @PathVariable Long id
     ) {
         return userService.getUserById(id);
+    }
+
+    @GetMapping("/{id}/payments")
+    public BaseResponseDto<List<PaymentRespDto>> getPaymentTicketUser(
+            @PathVariable Long id,
+            @RequestParam OperationStatus status
+    ) {
+        return userService.getPaymentTicketUser(id,status);
     }
 
     @DeleteMapping("/{id}")

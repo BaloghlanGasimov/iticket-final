@@ -26,8 +26,6 @@ public class CompanyService {
     private final CompanyRepository companyRepository;
     private final CommonMapper commonMapper;
     private final ImageService imageService;
-    private final ImageMapper imageMapper;
-    private final PhoneMapper phoneMapper;
 
     public BaseResponseDto<CompanyRespDto> deleteCompany(Long id) {
         log.info("ActionLog.deleteCompany.start id: {}", id);
@@ -104,7 +102,7 @@ public class CompanyService {
             company.setDescription(companyLoginReqDto.getDescription());
         }
         if (companyLoginReqDto.getPhones() != null) {
-            List<PhoneEntity> phones = companyLoginReqDto.getPhones().stream().map(phoneMapper::mapToEntity).toList();
+            List<PhoneEntity> phones = companyLoginReqDto.getPhones().stream().map(commonMapper::mapToEntity).toList();
             for (PhoneEntity phone : phones) {
                 phone.setCompany(company);
             }
@@ -113,7 +111,7 @@ public class CompanyService {
         if (companyLoginReqDto.getLogo() != null) {
             imageService.deleteFile(company.getLogo().getBucket(), company.getLogo().getName());
             try {
-                ImageEntity imageEntity = imageMapper.mapToEntity(companyLoginReqDto.getLogo());
+                ImageEntity imageEntity = commonMapper.mapToEntity(companyLoginReqDto.getLogo());
                 company.setLogo(imageEntity);
             } catch (Exception e) {
                 e.printStackTrace();

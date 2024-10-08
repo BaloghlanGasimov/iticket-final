@@ -11,8 +11,6 @@ import com.example.iticketfinal.dto.event.EventRespDto;
 import com.example.iticketfinal.enums.Exceptions;
 import com.example.iticketfinal.exceptions.NotFoundException;
 import com.example.iticketfinal.mapper.CommonMapper;
-import com.example.iticketfinal.mapper.PerformerMapper;
-import com.example.iticketfinal.mapper.TicketMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,8 +28,6 @@ public class EventService {
     private final EventRepository eventRepository;
     private final CommonMapper commonMapper;
     private final PerformerRepository performerRepository;
-    private final TicketMapper ticketMapper;
-    private final PerformerMapper performerMapper;
 
     public void checkEventExpire() {
         log.info("ActionLog.checkEventExpire.start");
@@ -122,11 +118,11 @@ public class EventService {
             eventEntity.setEventDate(eventReqDto.getEventDate());
         }
         if (eventReqDto.getTickets() != null) {
-            List<TicketEntity> ticketEntity = eventReqDto.getTickets().stream().map(ticketMapper::mapToEntity).toList();
+            List<TicketEntity> ticketEntity = eventReqDto.getTickets().stream().map(commonMapper::mapToEntity).toList();
             eventEntity.setTickets(ticketEntity);
         }
         if (eventReqDto.getPerformers() != null) {
-            List<PerformerEntity> performerEntities = eventReqDto.getPerformers().stream().map(performerMapper::mapToEntity).toList();
+            List<PerformerEntity> performerEntities = eventReqDto.getPerformers().stream().map(commonMapper::mapToEntity).toList();
             eventEntity.setPerformers(performerEntities);
         }
         if (eventReqDto.getCompanyId() != null) {

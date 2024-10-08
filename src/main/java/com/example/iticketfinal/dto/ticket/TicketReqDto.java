@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TicketDto {
+public class TicketReqDto {
     private TicketCategory category;
     private Integer count;
     private Double price;
