@@ -48,15 +48,22 @@ public class SecurityConfig {
                 .authorizeHttpRequests((requests) -> requests
                                 .requestMatchers("/*").hasAuthority(Roles.ADMIN.name())
                                 .requestMatchers(SWAGGER_WHITELIST).permitAll()
-                                .requestMatchers(HttpMethod.GET, "api/v1/users").permitAll()
-                                .requestMatchers(HttpMethod.POST, "api/v1/users/register/primary").permitAll()
-                                .requestMatchers(HttpMethod.PUT, "api/v1/users/**").hasAuthority(Roles.USER.name())
-                                .requestMatchers(HttpMethod.GET, "api/v1/places").permitAll()
-                                .requestMatchers(HttpMethod.GET , "api/v1/events/**").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/table/**").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/feedback/**").permitAll()
-                                .requestMatchers("/user/register/ordinary").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll()
+                                .requestMatchers(ALL_ACCESS).permitAll()
+
+                                .requestMatchers(HttpMethod.GET, USER_ACCESS_GET).hasAuthority(Roles.USER.name())
+                                .requestMatchers(HttpMethod.POST, USER_ACCESS_POST).hasAuthority(Roles.USER.name())
+                                .requestMatchers(HttpMethod.PUT, USER_ACCESS_PUT).hasAuthority(Roles.USER.name())
+                                .requestMatchers(HttpMethod.DELETE, USER_ACCESS_DELETE).hasAuthority(Roles.USER.name())
+
+//                                .requestMatchers(HttpMethod.POST, "api/v1/user/register/primary").permitAll()
+//                                .requestMatchers(HttpMethod.PUT, "api/v1/users/**").hasAuthority(Roles.USER.name())
+//                                .requestMatchers(HttpMethod.GET, "api/v1/places").permitAll()
+//                                .requestMatchers(HttpMethod.GET , "api/v1/events/**").permitAll()
+//                                .requestMatchers(HttpMethod.GET, "/table/**").permitAll()
+//                                .requestMatchers(HttpMethod.GET, "/feedback/**").permitAll()
+//                                .requestMatchers("/user/register/ordinary").permitAll()
+//                                .requestMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll()
+//
 //                        .requestMatchers("/api/**").hasAnyRole("ADMIN", "USER")
                                 .anyRequest().authenticated()
                 )
@@ -73,6 +80,25 @@ public class SecurityConfig {
         return http.build();
     }
 
+    private static final String[] ALL_ACCESS = {
+            "/api/v1/user/register/primary",
+            "/api/v1/user/payments",
+            "/api/v1/auth/user/login"
+
+    };
+    private static final String[] USER_ACCESS_GET = {
+            "/api/v1/user",
+            "/api/v1/user/payments"
+    };
+    private static final String[] USER_ACCESS_PUT = {
+            "/api/v1/user",
+    };
+    private static final String[] USER_ACCESS_DELETE = {
+            "/api/v1/user",
+    };
+    private static final String[] USER_ACCESS_POST = {
+            "/api/v1/user/buy/events/**"
+    };
     private static final String[] SWAGGER_WHITELIST = {
             "/v3/api-docs/**",
             "/swagger-ui/**",

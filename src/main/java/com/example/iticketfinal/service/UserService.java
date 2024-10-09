@@ -36,6 +36,7 @@ public class UserService {
     private final CountryRepository countryRepository;
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
+    private final MyUserDetailService myUserDetailService;
 
     public BaseResponseDto<UserRespDto> saveUserPrimary(UserPrimaryLoginReqDto userPrimaryLoginReqDto) {
         log.info("ActionLog.saveUser.start userPrimaryLoginReqDto: {}", userPrimaryLoginReqDto);
@@ -62,11 +63,11 @@ public class UserService {
     }
 
     @Transactional
-    public BaseResponseDto<UserRespDto> updateUser(Long id, UserLoginReqDto userLoginReqDto) {
-        log.info("ActionLog.updateUser.start id: {}, userLoginReqDto: {}", id, userLoginReqDto);
+    public BaseResponseDto<UserRespDto> updateUser(UserLoginReqDto userLoginReqDto) {
+        log.info("ActionLog.updateUser.start, userLoginReqDto: {}", userLoginReqDto);
 
-        UserEntity userEntity = findUser(id);
-
+//        UserEntity userEntity = findUser(id);
+        UserEntity userEntity = myUserDetailService.getCurrentAuthenticatedUser();
         if (userLoginReqDto.getName() != null) {
             userEntity.setName(userLoginReqDto.getName());
         }
@@ -97,7 +98,7 @@ public class UserService {
         }
         userRepository.save(userEntity);
         UserRespDto userRespDto = commonMapper.mapToRespDto(userEntity);
-        log.info("ActionLog.updateUser.end id: {} userLoginReqDto: {}", id, userLoginReqDto);
+        log.info("ActionLog.updateUser.end id: {} userLoginReqDto: {}", userEntity.getId(), userLoginReqDto);
 
         return BaseResponseDto.success(userRespDto);
     }
@@ -112,43 +113,43 @@ public class UserService {
         return BaseResponseDto.success(userRespDtos);
     }
 
-    public BaseResponseDto<UserRespDto> getUserById(Long id) {
-        log.info("ActionLog.getUserById.start id: {}", id);
+    public BaseResponseDto<UserRespDto> getUserById() {
+        log.info("ActionLog.getUserById.start");
 
-        UserEntity userEntity = findUser(id);
+        UserEntity userEntity = myUserDetailService.getCurrentAuthenticatedUser();
         UserRespDto userRespDto = commonMapper.mapToRespDto(userEntity);
 
-        log.info("ActionLog.getUserById.end id: {}", id);
+        log.info("ActionLog.getUserById.end id: {}", userEntity.getId());
         return BaseResponseDto.success(userRespDto);
     }
 
-    public BaseResponseDto<List<PaymentRespDto>> getPaymentTicketUser(Long id,OperationStatus status){
-        log.info("ActionLog.getPurchasedTicketUser.start id: {}", id);
+    public BaseResponseDto<List<PaymentRespDto>> getPaymentTicketUser(OperationStatus status){
+        log.info("ActionLog.getPurchasedTicketUser.start");
 
-        UserEntity userEntity = findUser(id);
-        List<PaymentHistoryEntity> paymentHistoryEntities = paymentHistoryRepository.findByUserId(id);
+        UserEntity userEntity = myUserDetailService.getCurrentAuthenticatedUser();
+        List<PaymentHistoryEntity> paymentHistoryEntities = paymentHistoryRepository.findByUserId(userEntity.getId());
         paymentHistoryEntities.stream().filter((payment)-> payment==null || payment.getStatus()==status);
         List<PaymentRespDto> paymentRespDtos = paymentHistoryEntities.stream().map(commonMapper::mapToDto).toList();
 
-        log.info("ActionLog.getPurchasedTicketUser.end id: {}", id);
+        log.info("ActionLog.getPurchasedTicketUser.end id: {}", userEntity.getId());
         return BaseResponseDto.success(paymentRespDtos);
     }
 
-    public BaseResponseDto<UserRespDto> deleteUser(Long id) {
-        log.info("ActionLog.deleteUser.start id: {}", id);
+    public BaseResponseDto<UserRespDto> deleteUser() {
+        log.info("ActionLog.deleteUser.start ");
 
-        UserEntity userEntity = findUser(id);
+        UserEntity userEntity = myUserDetailService.getCurrentAuthenticatedUser();
         UserRespDto userRespDto = commonMapper.mapToRespDto(userEntity);
-        userRepository.deleteById(id);
+        userRepository.delete(userEntity);
 
-        log.info("ActionLog.deleteUser.end id: {}", id);
+        log.info("ActionLog.deleteUser.end id: {}",userEntity.getId());
         return BaseResponseDto.success(userRespDto);
     }
 
-    public BaseResponseDto<UserRespDto> addToWallet(Long id, double money) {
-        log.info("ActionLog.addToWallet.start id: {} money: {}", id, money);
+    public BaseResponseDto<UserRespDto> addToWallet(double money) {
+        log.info("ActionLog.addToWallet.start money: {}", money);
 
-        UserEntity user = findUser(id);
+        UserEntity user = myUserDetailService.getCurrentAuthenticatedUser();
 
         if (money <= 0) {
             throw new NegativeMoneyException(
@@ -164,16 +165,16 @@ public class UserService {
         userRepository.save(user);
 
         UserRespDto userRespDto = commonMapper.mapToRespDto(user);
-        log.info("ActionLog.addToWallet.end id: {} money: {}", id, money);
+        log.info("ActionLog.addToWallet.end id: {} money: {}", user.getId(), money);
 
         return BaseResponseDto.success(userRespDto);
     }
 
     @Transactional
-    public void buyTicketsOfEventByWallet(Long userId, Long eventId, PaymentReqDto paymentReqDto) {
-        log.info("ActionLog.buyTicketsOfEventByWallet.start userId: {},eventId: {}, paymentReqDto: {}", userId, eventId, paymentReqDto);
+    public void buyTicketsOfEventByWallet(Long eventId, PaymentReqDto paymentReqDto) {
+        log.info("ActionLog.buyTicketsOfEventByWallet.start eventId: {}, paymentReqDto: {}", eventId, paymentReqDto);
 
-        UserEntity userEntity = findUser(userId);
+        UserEntity userEntity = myUserDetailService.getCurrentAuthenticatedUser();
 
         EventEntity eventEntity = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException(
@@ -252,7 +253,7 @@ public class UserService {
             }
         }
 
-        log.info("ActionLog.buyTicketsOfEventByWallet.end userId: {},eventId: {}, paymentReqDto: {}", userId, eventId, paymentReqDto);
+        log.info("ActionLog.buyTicketsOfEventByWallet.end userId: {},eventId: {}, paymentReqDto: {}", userEntity.getId(), eventId, paymentReqDto);
     }
 
     private UserEntity findUser(Long id) {

@@ -17,69 +17,63 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/users")
+@RequestMapping("api/v1/")
 @RequiredArgsConstructor
 @SecurityRequirement(name = "bearerAuth")
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("/register/primary")
+    @PostMapping("user/register/primary")
     public BaseResponseDto<UserRespDto> saveUserPrimary(
             @Valid @RequestBody UserPrimaryLoginReqDto userPrimaryLoginReqDto
     ) {
         return userService.saveUserPrimary(userPrimaryLoginReqDto);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/user")
     public BaseResponseDto<UserRespDto> updateUser(
-            @PathVariable Long id,
             @Valid @RequestBody UserLoginReqDto userLoginReqDto
     ) {
-        return userService.updateUser(id, userLoginReqDto);
+        return userService.updateUser(userLoginReqDto);
     }
 
-    @GetMapping
+    @GetMapping("/users")
     public BaseResponseDto<List<UserRespDto>> getUsers() {
         return userService.getUsers();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/user")
     public BaseResponseDto<UserRespDto> getUserById(
-            @PathVariable Long id
     ) {
-        return userService.getUserById(id);
+        return userService.getUserById();
     }
 
-    @GetMapping("/{id}/payments")
+    @GetMapping("/user/payments")
     public BaseResponseDto<List<PaymentRespDto>> getPaymentTicketUser(
-            @PathVariable Long id,
             @RequestParam OperationStatus status
     ) {
-        return userService.getPaymentTicketUser(id,status);
+        return userService.getPaymentTicketUser(status);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/user")
     public BaseResponseDto<UserRespDto> deleteUser(
-            @PathVariable Long id
     ) {
-        return userService.deleteUser(id);
+        return userService.deleteUser();
     }
 
-    @PatchMapping("/{id}/wallet/add")
+    @PatchMapping("/user/wallet/add")
     public BaseResponseDto<UserRespDto> addToWallet(
-            @PathVariable Long id,
             @RequestParam double money
     ) {
-        return userService.addToWallet(id, money);
+        return userService.addToWallet(money);
     }
 
-    @PostMapping("/{userId}/buy/events/{eventId}/ticket")
+    @PostMapping("/user/buy/events/{eventId}/ticket")
     public void buyTicketsOfEventByWallet(
-            @PathVariable Long userId,
             @PathVariable Long eventId,
             @Valid @RequestBody PaymentReqDto paymentReqDto
     ) {
-        userService.buyTicketsOfEventByWallet(userId, eventId, paymentReqDto);
+        userService.buyTicketsOfEventByWallet(eventId, paymentReqDto);
     }
 
 }
