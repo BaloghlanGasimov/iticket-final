@@ -9,6 +9,7 @@ import com.example.iticketfinal.dto.user.UserPrimaryLoginReqDto;
 import com.example.iticketfinal.dto.user.UserRespDto;
 import com.example.iticketfinal.enums.OperationStatus;
 import com.example.iticketfinal.service.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/users")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class UserController {
     private final UserService userService;
 

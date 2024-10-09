@@ -70,6 +70,20 @@ public class GlobalExceptionHandler {
         return new ExceptionDto(e.getErrorMessage());
     }
 
+    @ExceptionHandler(UserRegisteredException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ExceptionDto handler(UserRegisteredException e) {
+        log.error(e.getLogMessage());
+        return new ExceptionDto(e.getErrorMessage());
+    }
+
+    @ExceptionHandler(WrongAuthException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ExceptionDto handler(WrongAuthException e) {
+        log.error(e.getLogMessage());
+        return new ExceptionDto(e.getErrorMessage());
+    }
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ExceptionDto handler(Exception e) {

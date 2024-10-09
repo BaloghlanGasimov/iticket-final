@@ -4,6 +4,8 @@ import com.example.iticketfinal.dao.entity.UserEntity;
 import com.example.iticketfinal.dao.repository.UserRepository;
 import com.example.iticketfinal.dto.login.LoginRequestDto;
 import com.example.iticketfinal.dto.token.TokenResponseDto;
+import com.example.iticketfinal.enums.Exceptions;
+import com.example.iticketfinal.exceptions.WrongAuthException;
 import com.example.iticketfinal.service.MyUserDetailService;
 import com.example.iticketfinal.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +36,10 @@ public class AuthenticationController {
                     new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword())
             );
         } catch (BadCredentialsException e) {
-            throw new Exception("Incorrect username or password", e);
+            throw new WrongAuthException(
+                    Exceptions.WRONG_AUTH.name(),
+                    String.format("Actionlog.createAuthenticationToken.error Incorrect email or password email:%s, password:%s",authenticationRequest.getEmail(),authenticationRequest.getPassword())
+            );
         }
 
         final UserDetails userDetails = userDetailsService

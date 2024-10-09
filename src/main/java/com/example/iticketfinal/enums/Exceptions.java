@@ -7,5 +7,6 @@ public enum Exceptions {
     WRONG_FILE_NAME,
     EVENT_NOT_FOUND,
     ABOUT_NOT_FOUND,
-    EMAIL_REGISTERED
+    EMAIL_REGISTERED,
+    WRONG_AUTH
 }
