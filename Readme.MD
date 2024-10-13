@@ -35,7 +35,7 @@ The `X-Application-Name` header is used to identify the application or client ma
   {
       "name": "",
       "email": "",
-      "logoImage": file
+      "logoImage": ""
   }
 - **Response:**
   ```json
@@ -84,7 +84,7 @@ The `X-Application-Name` header is used to identify the application or client ma
   {
       "name": "",
       "email": "",
-      "logoImage": file,
+      "logoImage": "",
       "website": "string",
       "description": "string",
       "phones": [
